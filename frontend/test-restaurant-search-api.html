@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>餐厅搜索页面诊断</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .success { background: #e8f5e9; color: #2e7d32; }
+        .error { background: #ffebee; color: #c62828; }
+        .info { background: #e3f2fd; color: #1565c0; }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            background: #1976d2;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover { background: #1565c0; }
+        pre {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>餐厅搜索页面 API 诊断工具</h1>
+
+    <div class="test-section">
+        <h2>1. 测试餐厅搜索 API</h2>
+        <button onclick="testRestaurantSearch()">测试搜索"长沙"餐厅</button>
+        <div id="restaurantResult"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. 测试景点搜索 API</h2>
+        <button onclick="testAttractionSearch()">测试搜索"长沙"景点</button>
+        <div id="attractionResult"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. 测试目的地搜索 API</h2>
+        <button onclick="testDestinationSearch()">测试搜索"长沙"目的地</button>
+        <div id="destinationResult"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. 测试酒店搜索 API</h2>
+        <button onclick="testHotelSearch()">测试搜索"长沙"酒店</button>
+        <div id="hotelResult"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000/api';
+
+        async function testRestaurantSearch() {
+            const resultDiv = document.getElementById('restaurantResult');
+            resultDiv.innerHTML = '<div class="info">测试中...</div>';
+
+            try {
+                const url = `${API_BASE}/restaurants/search?location=长沙&page=1&limit=5`;
+                console.log('请求URL:', url);
+
+                const response = await fetch(url);
+                const result = await response.json();
+
+                console.log('餐厅API响应:', result);
+
+                if (result.success && result.data && result.data.restaurants) {
+                    resultDiv.innerHTML = `
+                        <div class="success">✅ 成功！找到 ${result.data.restaurants.length} 个餐厅</div>
+                        <h3>数据结构：</h3>
+                        <pre>${JSON.stringify(result, null, 2)}</pre>
+                        <h3>第一个餐厅：</h3>
+                        <pre>${JSON.stringify(result.data.restaurants[0], null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">❌ 失败：${JSON.stringify(result)}</div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">❌ 错误：${error.message}</div>
+                `;
+            }
+        }
+
+        async function testAttractionSearch() {
+            const resultDiv = document.getElementById('attractionResult');
+            resultDiv.innerHTML = '<div class="info">测试中...</div>';
+
+            try {
+                const url = `${API_BASE}/attractions/search?location=长沙&page=1&limit=5`;
+                console.log('请求URL:', url);
+
+                const response = await fetch(url);
+                const result = await response.json();
+
+                console.log('景点API响应:', result);
+
+                if (result.success && result.data) {
+                    resultDiv.innerHTML = `
+                        <div class="success">✅ 成功！找到 ${result.data.length} 个景点</div>
+                        <h3>数据结构：</h3>
+                        <pre>${JSON.stringify(result, null, 2)}</pre>
+                        <h3>第一个景点：</h3>
+                        <pre>${JSON.stringify(result.data[0], null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">❌ 失败：${JSON.stringify(result)}</div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">❌ 错误：${error.message}</div>
+                `;
+            }
+        }
+
+        async function testDestinationSearch() {
+            const resultDiv = document.getElementById('destinationResult');
+            resultDiv.innerHTML = '<div class="info">测试中...</div>';
+
+            try {
+                const url = `${API_BASE}/destinations/search?q=长沙`;
+                console.log('请求URL:', url);
+
+                const response = await fetch(url);
+                const result = await response.json();
+
+                console.log('目的地API响应:', result);
+
+                if (result.success && result.data) {
+                    resultDiv.innerHTML = `
+                        <div class="success">✅ 成功！找到 ${result.data.length} 个目的地</div>
+                        <h3>数据结构：</h3>
+                        <pre>${JSON.stringify(result, null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">❌ 失败：${JSON.stringify(result)}</div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">❌ 错误：${error.message}</div>
+                `;
+            }
+        }
+
+        async function testHotelSearch() {
+            const resultDiv = document.getElementById('hotelResult');
+            resultDiv.innerHTML = '<div class="info">测试中...</div>';
+
+            try {
+                // 先获取长沙的目的地ID
+                const destResponse = await fetch(`${API_BASE}/destinations/search?q=长沙`);
+                const destResult = await destResponse.json();
+
+                if (!destResult.success || !destResult.data || destResult.data.length === 0) {
+                    resultDiv.innerHTML = '<div class="error">❌ 未找到长沙目的地</div>';
+                    return;
+                }
+
+                const destinationId = destResult.data[0].id;
+                const url = `${API_BASE}/destinations/${destinationId}/hotels?page=1&limit=5`;
+                console.log('请求URL:', url);
+
+                const response = await fetch(url);
+                const result = await response.json();
+
+                console.log('酒店API响应:', result);
+
+                if (result.success && result.data) {
+                    resultDiv.innerHTML = `
+                        <div class="success">✅ 成功！找到 ${result.data.length} 个酒店</div>
+                        <h3>数据结构：</h3>
+                        <pre>${JSON.stringify(result, null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">❌ 失败：${JSON.stringify(result)}</div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">❌ 错误：${error.message}</div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高德地图定位示例</title>
+    <script src="https://webapi.amap.com/maps?v=2.0&key=0c4c21c26cf0ed2fcebc2fabef2d6a0c"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        #container {
+            width: 100%;
+            height: 500px;
+            margin-bottom: 20px;
+        }
+
+        .info-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .info-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 4px;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .info-value {
+            color: #666;
+            margin-left: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #00aa6c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background: #008c5a;
+        }
+    </style>
+</head>
+<body>
+    <h1>高德地图定位功能测试</h1>
+
+    <div>
+        <button onclick="getCurrentPosition()">获取当前位置</button>
+        <button onclick="searchNearby()">搜索附近POI</button>
+    </div>
+
+    <div id="container"></div>
+
+    <div class="info-panel">
+        <h3>定位信息</h3>
+        <div class="info-item">
+            <span class="info-label">城市:</span>
+            <span class="info-value" id="cityName">-</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">省份:</span>
+            <span class="info-value" id="provinceName">-</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">经纬度:</span>
+            <span class="info-value" id="coordinates">-</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">详细地址:</span>
+            <span class="info-value" id="address">-</span>
+        </div>
+    </div>
+
+    <script>
+        let map;
+        let marker;
+        let currentPosition = null;
+
+        // 初始化地图
+        function initMap() {
+            map = new AMap.Map('container', {
+                zoom: 13,
+                center: [116.397428, 39.90923], // 默认北京
+                viewMode: '3D'
+            });
+
+            // 添加定位控件
+            AMap.plugin('AMap.Geolocation', function() {
+                const geolocation = new AMap.Geolocation({
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    buttonPosition: 'RB',
+                    buttonOffset: new AMap.Pixel(10, 20),
+                    zoomToAccuracy: true
+                });
+
+                map.addControl(geolocation);
+
+                // 自动定位
+                geolocation.getCurrentPosition(function(status, result) {
+                    if (status === 'complete') {
+                        onLocationSuccess(result);
+                    } else {
+                        onLocationError(result);
+                    }
+                });
+            });
+        }
+
+        // 定位成功回调
+        function onLocationSuccess(result) {
+            currentPosition = result.position;
+
+            // 更新地图中心
+            map.setCenter([currentPosition.lng, currentPosition.lat]);
+
+            // 添加标记
+            if (marker) {
+                marker.setPosition([currentPosition.lng, currentPosition.lat]);
+            } else {
+                marker = new AMap.Marker({
+                    position: [currentPosition.lng, currentPosition.lat],
+                    title: '当前位置'
+                });
+                map.add(marker);
+            }
+
+            // 更新信息面板
+            document.getElementById('cityName').textContent = result.addressComponent.city || result.addressComponent.province;
+            document.getElementById('provinceName').textContent = result.addressComponent.province;
+            document.getElementById('coordinates').textContent = `${currentPosition.lng}, ${currentPosition.lat}`;
+            document.getElementById('address').textContent = result.formattedAddress;
+
+            console.log('定位成功:', result);
+        }
+
+        // 定位失败回调
+        function onLocationError(result) {
+            console.error('定位失败:', result);
+            alert('定位失败: ' + result.message);
+        }
+
+        // 获取当前位置
+        function getCurrentPosition() {
+            AMap.plugin('AMap.Geolocation', function() {
+                const geolocation = new AMap.Geolocation({
+                    enableHighAccuracy: true,
+                    timeout: 10000
+                });
+
+                geolocation.getCurrentPosition(function(status, result) {
+                    if (status === 'complete') {
+                        onLocationSuccess(result);
+                        alert('定位成功！');
+                    } else {
+                        onLocationError(result);
+                    }
+                });
+            });
+        }
+
+        // 搜索附近POI
+        function searchNearby() {
+            if (!currentPosition) {
+                alert('请先获取当前位置');
+                return;
+            }
+
+            AMap.plugin('AMap.PlaceSearch', function() {
+                const placeSearch = new AMap.PlaceSearch({
+                    type: '餐饮服务|商务住宅|风景名胜',
+                    pageSize: 10,
+                    pageIndex: 1,
+                    city: '全国',
+                    citylimit: false,
+                    extensions: 'all'
+                });
+
+                placeSearch.searchNearBy('', [currentPosition.lng, currentPosition.lat], 1000, function(status, result) {
+                    if (status === 'complete' && result.poiList) {
+                        console.log('附近POI:', result.poiList.pois);
+                        alert(`找到 ${result.poiList.pois.length} 个附近地点，详情请查看控制台`);
+
+                        // 在地图上显示POI
+                        result.poiList.pois.forEach(poi => {
+                            const poiMarker = new AMap.Marker({
+                                position: [poi.location.lng, poi.location.lat],
+                                title: poi.name,
+                                icon: new AMap.Icon({
+                                    size: new AMap.Size(25, 34),
+                                    image: '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png',
+                                    imageSize: new AMap.Size(25, 34)
+                                })
+                            });
+                            map.add(poiMarker);
+                        });
+                    } else {
+                        alert('搜索失败');
+                    }
+                });
+            });
+        }
+
+        // 页面加载时初始化地图
+        window.onload = function() {
+            initMap();
+        };
+    </script>
+</body>
+</html>

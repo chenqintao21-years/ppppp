@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>长沙景点玩乐 - TripAdvisor</title>
+    <link rel="stylesheet" href="../styles/pages/restaurant-search.css">
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo">
+                <a href="index.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: inherit;">
+                    <svg width="32" height="32" viewBox="0 0 32 32">
+                        <circle cx="16" cy="16" r="14" fill="#34e0a1"/>
+                        <path d="M16 8 L20 14 L16 12 L12 14 Z" fill="#000"/>
+                    </svg>
+                    <span style="font-size: 20px; font-weight: bold;">TripAdvisor</span>
+                </a>
+            </div>
+
+            <nav class="main-nav">
+                <a href="index.html">首页</a>
+                <a href="hotel-page.html">酒店</a>
+                <a href="attractions.html" class="active">景点玩乐</a>
+                <a href="restaurant.html">美食</a>
+            </nav>
+
+        </div>
+    </header>
+
+    <!-- 搜索栏 -->
+    <div class="search-bar-section">
+        <div class="search-container">
+            <div class="search-input-wrapper">
+                <input type="text" id="searchInput" placeholder="搜索景点、活动或体验" value="长沙">
+                <button class="search-btn">🔍</button>
+            </div>
+            <div class="search-filters">
+                <button class="filter-btn active">全部</button>
+                <button class="filter-btn">景点</button>
+                <button class="filter-btn">户外活动</button>
+                <button class="filter-btn">文化体验</button>
+                <button class="filter-btn">一日游</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主要内容区 -->
+    <main class="main-content">
+        <div class="content-wrapper">
+            <!-- 侧边栏筛选 -->
+            <aside class="sidebar">
+                <div class="filter-section">
+                    <h3>筛选结果</h3>
+
+                    <div class="filter-group">
+                        <label class="filter-category-item">
+                            <input type="radio" name="category" value="all">
+                            <span>所有结果</span>
+                        </label>
+                        <label class="filter-category-item active">
+                            <input type="radio" name="category" value="attractions" checked>
+                            <span>景点玩乐</span>
+                        </label>
+                        <label class="filter-category-item">
+                            <input type="radio" name="category" value="hotels">
+                            <span>酒店</span>
+                        </label>
+                        <label class="filter-category-item">
+                            <input type="radio" name="category" value="destinations">
+                            <span>目的地</span>
+                        </label>
+                        <label class="filter-category-item">
+                            <input type="radio" name="category" value="restaurants">
+                            <span>餐厅</span>
+                        </label>
+                    </div>
+
+                    <div class="filter-divider"></div>
+
+                    <div class="filter-group">
+                        <h4>景点类型</h4>
+                        <label><input type="checkbox" name="type" value="nature"> 自然景观</label>
+                        <label><input type="checkbox" name="type" value="culture"> 文化景点</label>
+                        <label><input type="checkbox" name="type" value="adventure"> 冒险活动</label>
+                        <label><input type="checkbox" name="type" value="historical"> 历史遗迹</label>
+                        <label><input type="checkbox" name="type" value="entertainment"> 娱乐休闲</label>
+                    </div>
+
+                    <div class="filter-group">
+                        <h4>适合人群</h4>
+                        <label><input type="checkbox" name="suitable" value="family"> 适合家庭</label>
+                        <label><input type="checkbox" name="suitable" value="couple"> 适合情侣</label>
+                        <label><input type="checkbox" name="suitable" value="solo"> 独自旅行</label>
+                        <label><input type="checkbox" name="suitable" value="group"> 团体出游</label>
+                    </div>
+
+                    <div class="filter-group">
+                        <h4>价格区间</h4>
+                        <label><input type="checkbox" name="price" value="free"> 免费</label>
+                        <label><input type="checkbox" name="price" value="1"> ¥ 经济实惠</label>
+                        <label><input type="checkbox" name="price" value="2"> ¥¥ 中等价位</label>
+                        <label><input type="checkbox" name="price" value="3"> ¥¥¥ 高档</label>
+                    </div>
+
+                    <button class="clear-filters-btn">清除筛选</button>
+                </div>
+
+                <!-- 推荐小组件 -->
+                <div class="sidebar-widget">
+                    <h3>热门推荐</h3>
+                    <div class="widget-item">
+                        <img src="https://picsum.photos/80/80?random=21" alt="推荐景点">
+                        <div class="widget-info">
+                            <h4>漓江风景区</h4>
+                            <div class="widget-rating">
+                                <span class="stars">★★★★★</span>
+                                <span class="rating-num">4.9</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="widget-item">
+                        <img src="https://picsum.photos/80/80?random=22" alt="推荐景点">
+                        <div class="widget-info">
+                            <h4>象鼻山</h4>
+                            <div class="widget-rating">
+                                <span class="stars">★★★★☆</span>
+                                <span class="rating-num">4.7</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- 景点列表 -->
+            <section class="restaurant-list">
+                <div class="list-header">
+                    <h2>长沙景点玩乐 - 搜索结果</h2>
+                    <div class="sort-options">
+                        <label>排序：</label>
+                        <select id="sortSelect">
+                            <option value="recommended">推荐</option>
+                            <option value="rating">评分最高</option>
+                            <option value="reviews">评论最多</option>
+                            <option value="price-low">价格从低到高</option>
+                            <option value="price-high">价格从高到低</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 景点卡片容器 -->
+                <div id="attractionContainer" class="restaurant-cards">
+                    <!-- 景点卡片将通过 JavaScript 动态加载 -->
+                </div>
+
+                <!-- 加载更多按钮 -->
+                <div class="load-more-section">
+                    <button id="loadMoreBtn" class="load-more-btn">加载更多</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <p>&copy; 2024 TripAdvisor. 保留所有权利。</p>
+            <div class="footer-links">
+                <a href="#">关于我们</a>
+                <a href="#">隐私政策</a>
+                <a href="#">使用条款</a>
+                <a href="#">联系我们</a>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        // 自动定位并导入城市数据（已禁用）
+        import { initAutoLocationImport } from '../services/autoLocationImport.js';
+
+        // 页面加载时自动执行（已禁用）
+        // initAutoLocationImport({ autoStart: true, silent: false });
+
+        // 监听城市数据导入完成事件
+        window.addEventListener('cityDataImported', (event) => {
+            const { city, data } = event.detail;
+            console.log('城市数据已导入:', city, data);
+
+            // 更新搜索框的城市
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.value = city;
+            }
+
+            // 重新加载景点数据
+            if (typeof loadAttractions === 'function') {
+                loadAttractions();
+            }
+        });
+    </script>
+    <script src="../pages/attractions/search.js"></script>
+</body>
+</html>

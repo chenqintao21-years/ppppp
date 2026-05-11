@@ -1,0 +1,124 @@
+
+> tripadvisor-backend@1.0.0 dev
+> nodemon src/server.js
+
+[33m[nodemon] 3.1.14[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: js,mjs,cjs,json[39m
+[32m[nodemon] starting `node src/server.js`[39m
+◇ injected env (12) from .env // tip: ⌘ enable debugging { debug: true }
+Ignoring invalid configuration option passed to Connection: collation. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+◇ injected env (0) from .env // tip: ◈ encrypted .env [www.dotenvx.com]
+◇ injected env (0) from .env // tip: ◈ encrypted .env [www.dotenvx.com]
+Ignoring invalid configuration option passed to Connection: collation. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+◇ injected env (0) from .env // tip: ◈ secrets for agents [www.dotenvx.com]
+✅ 数据库连接成功
+✅ 数据库表初始化成功
+✅ 后端服务器运行在 http://localhost:3000
+📚 API文档: http://localhost:3000/api
+🌐 前端开发服务器: http://localhost:5173
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/server.js`[39m
+◇ injected env (12) from .env // tip: ◈ secrets for agents [www.dotenvx.com]
+Ignoring invalid configuration option passed to Connection: collation. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+◇ injected env (0) from .env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+◇ injected env (0) from .env // tip: ◈ secrets for agents [www.dotenvx.com]
+Ignoring invalid configuration option passed to Connection: collation. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+◇ injected env (0) from .env // tip: ⌘ override existing { override: true }
+✅ 数据库连接成功
+✅ 数据库表初始化成功
+✅ 后端服务器运行在 http://localhost:3000
+📚 API文档: http://localhost:3000/api
+🌐 前端开发服务器: http://localhost:5173
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/server.js`[39m
+◇ injected env (12) from .env // tip: ⌘ suppress logs { quiet: true }
+Ignoring invalid configuration option passed to Connection: collation. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+◇ injected env (0) from .env // tip: ⌘ suppress logs { quiet: true }
+◇ injected env (0) from .env // tip: ◈ encrypted .env [www.dotenvx.com]
+Ignoring invalid configuration option passed to Connection: collation. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+◇ injected env (0) from .env // tip: ⌁ auth for agents [www.vestauth.com]
+✅ 数据库连接成功
+✅ 数据库表初始化成功
+✅ 后端服务器运行在 http://localhost:3000
+📚 API文档: http://localhost:3000/api
+🌐 前端开发服务器: http://localhost:5173
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/server.js`[39m
+◇ injected env (12) from .env // tip: ◈ encrypted .env [www.dotenvx.com]
+Ignoring invalid configuration option passed to Connection: collation. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+◇ injected env (0) from .env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+◇ injected env (0) from .env // tip: ◈ secrets for agents [www.dotenvx.com]
+Ignoring invalid configuration option passed to Connection: collation. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+◇ injected env (0) from .env // tip: ◈ encrypted .env [www.dotenvx.com]
+✅ 数据库连接成功
+✅ 数据库表初始化成功
+✅ 后端服务器运行在 http://localhost:3000
+📚 API文档: http://localhost:3000/api
+🌐 前端开发服务器: http://localhost:5173
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/server.js`[39m
+◇ injected env (12) from .env // tip: ◈ encrypted .env [www.dotenvx.com]
+Ignoring invalid configuration option passed to Connection: collation. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+◇ injected env (0) from .env // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+◇ injected env (0) from .env // tip: ⌘ override existing { override: true }
+Ignoring invalid configuration option passed to Connection: collation. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+◇ injected env (0) from .env // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+✅ 数据库连接成功
+✅ 数据库表初始化成功
+✅ 后端服务器运行在 http://localhost:3000
+📚 API文档: http://localhost:3000/api
+🌐 前端开发服务器: http://localhost:5173
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/server.js`[39m
+◇ injected env (12) from .env // tip: ⌘ suppress logs { quiet: true }
+Ignoring invalid configuration option passed to Connection: collation. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+◇ injected env (0) from .env // tip: ◈ encrypted .env [www.dotenvx.com]
+◇ injected env (0) from .env // tip: ◈ secrets for agents [www.dotenvx.com]
+Ignoring invalid configuration option passed to Connection: collation. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+◇ injected env (0) from .env // tip: ◈ secrets for agents [www.dotenvx.com]
+✅ 数据库连接成功
+✅ 数据库表初始化成功
+✅ 后端服务器运行在 http://localhost:3000
+📚 API文档: http://localhost:3000/api
+🌐 前端开发服务器: http://localhost:5173
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/server.js`[39m
+◇ injected env (12) from .env // tip: ⌘ enable debugging { debug: true }
+Ignoring invalid configuration option passed to Connection: collation. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+◇ injected env (0) from .env // tip: ⌘ suppress logs { quiet: true }
+◇ injected env (0) from .env // tip: ⌘ override existing { override: true }
+Ignoring invalid configuration option passed to Connection: collation. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+◇ injected env (0) from .env // tip: ⌘ enable debugging { debug: true }
+✅ 数据库连接成功
+✅ 数据库表初始化成功
+✅ 后端服务器运行在 http://localhost:3000
+📚 API文档: http://localhost:3000/api
+🌐 前端开发服务器: http://localhost:5173
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/server.js`[39m
+◇ injected env (12) from .env // tip: ⌁ auth for agents [www.vestauth.com]
+Ignoring invalid configuration option passed to Connection: collation. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+◇ injected env (0) from .env // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+◇ injected env (0) from .env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+Ignoring invalid configuration option passed to Connection: collation. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+◇ injected env (0) from .env // tip: ⌁ auth for agents [www.vestauth.com]
+✅ 数据库连接成功
+✅ 数据库表初始化成功
+✅ 后端服务器运行在 http://localhost:3000
+📚 API文档: http://localhost:3000/api
+🌐 前端开发服务器: http://localhost:5173
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node src/server.js`[39m
+◇ injected env (12) from .env // tip: ⌘ enable debugging { debug: true }
+Ignoring invalid configuration option passed to Connection: collation. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+◇ injected env (0) from .env // tip: ◈ secrets for agents [www.dotenvx.com]
+◇ injected env (0) from .env // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+Ignoring invalid configuration option passed to Connection: collation. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+◇ injected env (0) from .env // tip: ◈ secrets for agents [www.dotenvx.com]
+✅ 数据库连接成功
+✅ 数据库表初始化成功
+✅ 后端服务器运行在 http://localhost:3000
+📚 API文档: http://localhost:3000/api
+🌐 前端开发服务器: http://localhost:5173

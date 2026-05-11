@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>景点详情 - Tripadvisor</title>
+    <link rel="stylesheet" href="../styles/base/styles.css">
+    <link rel="stylesheet" href="../styles/pages/attraction-detail.css">
+</head>
+<body>
+    <header class="header-attractions header-top">
+        <div class="container">
+            <nav class="navbar-attractions">
+                <div class="nav-left">
+                    <div class="logo">
+                        <a href="index.html">
+                            <svg width="166" height="28" viewBox="0 0 166 28">
+                                <path d="M14 0C6.3 0 0 6.3 0 14s6.3 14 14 14 14-6.3 14-14S21.7 0 14 0zm0 25c-6.1 0-11-4.9-11-11S7.9 3 14 3s11 4.9 11 11-4.9 11-11 11z" fill="#00AA6C"/>
+                                <circle cx="9" cy="14" r="3.5" fill="#00AA6C"/>
+                                <circle cx="19" cy="14" r="3.5" fill="#00AA6C"/>
+                                <text x="32" y="20" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#000">Tripadvisor</text>
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="search-bar-header">
+                        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <input type="text" placeholder="搜索" class="search-input-header">
+                    </div>
+                </div>
+            </nav>
+            <div class="sub-nav">
+                <a href="hotel-page.html" class="sub-nav-link">酒店</a>
+                <a href="attractions.html" class="sub-nav-link active">景点玩乐</a>
+                <a href="restaurant.html" class="sub-nav-link">美食</a>
+                <a href="#" class="sub-nav-link">游船</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 滚动时显示的导航栏 -->
+    <div class="header-scrolled">
+        <div class="container">
+            <nav class="navbar-scrolled">
+                <div class="logo">
+                    <a href="index.html">
+                        <svg width="166" height="28" viewBox="0 0 166 28">
+                            <path d="M14 0C6.3 0 0 6.3 0 14s6.3 14 14 14 14-6.3 14-14S21.7 0 14 0zm0 25c-6.1 0-11-4.9-11-11S7.9 3 14 3s11 4.9 11 11-4.9 11-11 11z" fill="#00AA6C"/>
+                            <circle cx="9" cy="14" r="3.5" fill="#00AA6C"/>
+                            <circle cx="19" cy="14" r="3.5" fill="#00AA6C"/>
+                            <text x="32" y="20" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#000">Tripadvisor</text>
+                        </svg>
+                    </a>
+                </div>
+                <div class="search-bar-compact">
+                    <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input type="text" placeholder="搜索" class="search-input-compact">
+                </div>
+                <div class="nav-tabs">
+                    <a href="hotel-page.html" class="nav-tab">酒店</a>
+                    <a href="attractions.html" class="nav-tab active">景点玩乐</a>
+                    <a href="restaurant.html" class="nav-tab">美食</a>
+                    <a href="#" class="nav-tab">游船</a>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <main class="detail-main">
+        <div class="container">
+            <!-- 面包屑导航 -->
+            <nav class="breadcrumb">
+                <button class="back-button" onclick="window.history.length > 1 ? window.history.back() : window.location.href='index.html'">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                    <span>返回</span>
+                </button>
+                <a href="index.html">首页</a>
+                <span>›</span>
+                <a href="attractions.html">景点玩乐</a>
+                <span>›</span>
+                <span id="breadcrumb-name">加载中...</span>
+            </nav>
+
+            <div class="detail-layout">
+                <!-- 左侧主内容 -->
+                <div class="detail-content">
+                    <!-- 标题区域 -->
+                    <div class="detail-header">
+                        <h1 class="detail-title" id="attraction-title">加载中...</h1>
+                        <button class="favorite-btn-detail">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            </svg>
+                            保存
+                        </button>
+                    </div>
+
+                    <!-- 评分区域 -->
+                    <div class="rating-section">
+                        <div class="rating-bubbles-large" id="rating-bubbles">
+                            <span class="bubble filled"></span>
+                            <span class="bubble filled"></span>
+                            <span class="bubble filled"></span>
+                            <span class="bubble filled"></span>
+                            <span class="bubble filled"></span>
+                        </div>
+                        <span class="rating-score" id="rating-score">5.0</span>
+                        <span class="review-count" id="review-count">加载中...</span>
+                    </div>
+
+                    <!-- 图片轮播 -->
+                    <div class="image-gallery">
+                        <div class="main-image">
+                            <img id="main-gallery-image" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='500'%3E%3Crect fill='%23e76f51' width='800' height='500'/%3E%3Ctext x='50%25' y='50%25' font-size='24' fill='white' text-anchor='middle' dy='.3em'%3E加载中...%3C/text%3E%3C/svg%3E" alt="景点图片">
+                            <button class="gallery-nav prev">‹</button>
+                            <button class="gallery-nav next">›</button>
+                            <div class="image-counter">1 / 1</div>
+                        </div>
+                        <div class="thumbnail-grid" id="thumbnail-grid">
+                            <!-- 缩略图将通过JavaScript动态加载 -->
+                            <div class="thumbnail active"></div>
+                        </div>
+                    </div>
+
+                    <!-- 关于此景点 -->
+                    <section class="about-section">
+                        <h2>关于</h2>
+                        <p class="about-text" id="about-text">
+                            加载中...
+                        </p>
+                        <button class="read-more">阅读更多</button>
+                    </section>
+
+                    <!-- 亮点 -->
+                    <section class="highlights-section">
+                        <h2>亮点</h2>
+                        <ul class="highlights-list" id="highlights-list">
+                            <li>加载中...</li>
+                        </ul>
+                    </section>
+
+                    <!-- 包含内容 -->
+                    <section class="includes-section">
+                        <h2>包含内容</h2>
+                        <div class="includes-grid" id="includes-list">
+                            <div class="include-item">加载中...</div>
+                        </div>
+                        <h3>不包含</h3>
+                        <div class="excludes-grid" id="excludes-list">
+                            <div class="exclude-item">加载中...</div>
+                        </div>
+                    </section>
+
+                    <!-- 地图位置 -->
+                    <section class="map-section">
+                        <h2>位置</h2>
+                        <div id="attraction-map" style="width: 100%; height: 400px; border-radius: 8px; overflow: hidden;"></div>
+                        <div class="map-info">
+                            <p class="map-address">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg>
+                                <span id="attraction-address">北京市东城区景山前街4号</span>
+                            </p>
+                            <div class="map-actions">
+                                <button class="map-btn" id="show-nearby-btn">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                    附近景点
+                                </button>
+                                <button class="map-btn" id="plan-route-btn">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        <polyline points="12 5 19 12 12 19"></polyline>
+                                    </svg>
+                                    路线规划
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 详细信息 -->
+                    <section class="info-section">
+                        <h2>详细信息</h2>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                <div class="info-content">
+                                    <span class="info-label">营业时间</span>
+                                    <span class="info-value" id="attraction-hours">加载中...</span>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                                </svg>
+                                <div class="info-content">
+                                    <span class="info-label">联系电话</span>
+                                    <span class="info-value" id="attraction-phone">加载中...</span>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="9" y1="3" x2="9" y2="21"></line>
+                                    <line x1="15" y1="3" x2="15" y2="21"></line>
+                                </svg>
+                                <div class="info-content">
+                                    <span class="info-label">设施服务</span>
+                                    <div class="facilities-list" id="attraction-facilities">
+                                        <span class="facility-tag">加载中...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 评论区 -->
+                    <section class="reviews-section">
+                        <h2>旅行者点评</h2>
+                        <div class="reviews-summary">
+                            <div class="rating-breakdown" id="rating-breakdown">
+                                <!-- 评分分布将通过JavaScript动态加载 -->
+                                <div class="rating-bar">
+                                    <span class="rating-label">优秀</span>
+                                    <div class="bar"><div class="bar-fill" style="width: 0%"></div></div>
+                                    <span class="rating-percent">0%</span>
+                                </div>
+                                <div class="rating-bar">
+                                    <span class="rating-label">非常好</span>
+                                    <div class="bar"><div class="bar-fill" style="width: 0%"></div></div>
+                                    <span class="rating-percent">0%</span>
+                                </div>
+                                <div class="rating-bar">
+                                    <span class="rating-label">一般</span>
+                                    <div class="bar"><div class="bar-fill" style="width: 0%"></div></div>
+                                    <span class="rating-percent">0%</span>
+                                </div>
+                                <div class="rating-bar">
+                                    <span class="rating-label">较差</span>
+                                    <div class="bar"><div class="bar-fill" style="width: 0%"></div></div>
+                                    <span class="rating-percent">0%</span>
+                                </div>
+                                <div class="rating-bar">
+                                    <span class="rating-label">很糟</span>
+                                    <div class="bar"><div class="bar-fill" style="width: 0%"></div></div>
+                                    <span class="rating-percent">0%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="reviews-list">
+                            <!-- 评论将通过JavaScript动态加载 -->
+                        </div>
+
+                        <button class="load-more-reviews">查看更多点评</button>
+                    </section>
+                </div>
+
+                <!-- 右侧预订卡片 -->
+                <aside class="booking-sidebar">
+                    <div class="booking-card sticky">
+                        <div class="price-section">
+                            <span class="price-label">起价</span>
+                            <div class="price-amount">
+                                <span class="currency-symbol">$</span>
+                                <span class="price" id="attraction-price">0.00</span>
+                            </div>
+                            <span class="price-note">每位成人</span>
+                        </div>
+
+                        <div class="booking-form">
+                            <div class="form-group">
+                                <label>日期</label>
+                                <input type="date" class="form-control" id="booking-date">
+                            </div>
+
+                            <div class="form-group">
+                                <label>旅行者</label>
+                                <div class="travelers-selector">
+                                    <button class="qty-btn minus">-</button>
+                                    <input type="number" value="2" min="1" class="qty-input" id="travelers-count">
+                                    <button class="qty-btn plus">+</button>
+                                </div>
+                            </div>
+
+                            <button class="book-now-btn">预订</button>
+                        </div>
+
+                        <div class="booking-features">
+                            <div class="feature-item">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00aa6c" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <span>免费取消</span>
+                            </div>
+                            <div class="feature-item">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00aa6c" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <span>立即预订，稍后付款</span>
+                            </div>
+                            <div class="feature-item">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00aa6c" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <span>最低价格保证</span>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+
+            <!-- 相关推荐 -->
+            <section class="related-section">
+                <h2>您可能还喜欢</h2>
+                <div class="related-grid" id="related-grid">
+                    <!-- 相关推荐将通过JavaScript动态加载 -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Tripadvisor. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../pages/attractions/detail-standalone.js"></script>
+    <script src="../utils/scrollNav.js"></script>
+</body>
+</html>

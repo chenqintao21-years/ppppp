@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高德地图 - 酒店搜索演示</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .control-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #00aa6c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #009959;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        #map-container {
+            width: 100%;
+            height: 500px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .hotel-list {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .hotel-list h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .hotel-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            transition: background 0.2s;
+        }
+
+        .hotel-item:last-child {
+            border-bottom: none;
+        }
+
+        .hotel-item:hover {
+            background: #f9f9f9;
+        }
+
+        .hotel-name {
+            font-size: 16px;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .hotel-info {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 3px;
+        }
+
+        .hotel-distance {
+            font-size: 13px;
+            color: #00aa6c;
+            font-weight: bold;
+        }
+
+        .hotel-photos {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            overflow-x: auto;
+        }
+
+        .hotel-photo {
+            width: 120px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            flex-shrink: 0;
+        }
+
+        .hotel-rating {
+            color: #ff9800;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .stats {
+            background: #f0f9ff;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            color: #0066cc;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏨 高德地图酒店搜索演示</h1>
+
+        <div class="controls">
+            <div class="control-group">
+                <label>中心点经度</label>
+                <input type="number" id="lng" value="116.397428" step="0.000001">
+            </div>
+            <div class="control-group">
+                <label>中心点纬度</label>
+                <input type="number" id="lat" value="39.90923" step="0.000001">
+            </div>
+            <div class="control-group">
+                <label>搜索半径（米）</label>
+                <input type="number" id="radius" value="3000" min="100" max="10000" step="100">
+            </div>
+            <div class="control-group">
+                <label>返回数量</label>
+                <input type="number" id="pageSize" value="20" min="1" max="50">
+            </div>
+            <div class="button-group">
+                <button onclick="searchHotels()">🔍 搜索酒店</button>
+                <button onclick="useCurrentLocation()">📍 使用当前位置</button>
+                <button onclick="clearMap()">🗑️ 清除标记</button>
+            </div>
+        </div>
+
+        <div id="map-container"></div>
+
+        <div class="hotel-list">
+            <h2>搜索结果</h2>
+            <div id="hotel-results">
+                <div class="empty-state">
+                    点击"搜索酒店"开始查找附近的酒店
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import mapUtil from './map.js';
+
+        let currentCenter = null;
+
+        // 初始化地图
+        async function initMap() {
+            const lng = parseFloat(document.getElementById('lng').value);
+            const lat = parseFloat(document.getElementById('lat').value);
+            currentCenter = [lng, lat];
+
+            await mapUtil.initMap('map-container', {
+                center: currentCenter,
+                zoom: 14
+            });
+
+            // 添加中心点标记
+            mapUtil.addMarker(currentCenter, {
+                title: '搜索中心',
+                icon: new mapUtil.AMap.Icon({
+                    size: new mapUtil.AMap.Size(30, 40),
+                    image: '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png',
+                    imageSize: new mapUtil.AMap.Size(30, 40)
+                })
+            });
+
+            console.log('地图初始化成功');
+        }
+
+        // 搜索酒店
+        window.searchHotels = async function() {
+            const lng = parseFloat(document.getElementById('lng').value);
+            const lat = parseFloat(document.getElementById('lat').value);
+            const radius = parseInt(document.getElementById('radius').value);
+            const pageSize = parseInt(document.getElementById('pageSize').value);
+
+            currentCenter = [lng, lat];
+
+            const resultsDiv = document.getElementById('hotel-results');
+            resultsDiv.innerHTML = '<div class="loading">🔄 搜索中...</div>';
+
+            try {
+                // 清除之前的标记（保留中心点）
+                mapUtil.clearMarkers();
+                mapUtil.addMarker(currentCenter, {
+                    title: '搜索中心',
+                    icon: new mapUtil.AMap.Icon({
+                        size: new mapUtil.AMap.Size(30, 40),
+                        image: '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png',
+                        imageSize: new mapUtil.AMap.Size(30, 40)
+                    })
+                });
+
+                // 搜索酒店
+                const hotels = await mapUtil.showNearbyHotels(currentCenter, {
+                    radius: radius,
+                    pageSize: pageSize
+                });
+
+                // 显示结果
+                if (hotels.length > 0) {
+                    let html = `
+                        <div class="stats">
+                            找到 ${hotels.length} 家酒店，搜索半径 ${radius} 米
+                        </div>
+                    `;
+
+                    hotels.forEach((hotel, index) => {
+                        html += `
+                            <div class="hotel-item">
+                                <div class="hotel-name">${index + 1}. ${hotel.name}</div>
+                                ${hotel.rating ? `<div class="hotel-rating">⭐ 评分: ${hotel.rating}</div>` : ''}
+                                <div class="hotel-info">📍 ${hotel.address}</div>
+                                <div class="hotel-info">📞 ${hotel.tel}</div>
+                                <div class="hotel-distance">📏 距离: ${mapUtil.formatDistance(hotel.distance)}</div>
+                                ${hotel.photos && hotel.photos.length > 0 ? `
+                                    <div class="hotel-photos">
+                                        ${hotel.photos.slice(0, 4).map(photo =>
+                                            `<img src="${photo.url}" class="hotel-photo" alt="${hotel.name}" onerror="this.style.display='none'">`
+                                        ).join('')}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    });
+
+                    resultsDiv.innerHTML = html;
+
+                    // 自适应显示所有标记
+                    mapUtil.fitView();
+                } else {
+                    resultsDiv.innerHTML = '<div class="empty-state">未找到酒店，请尝试扩大搜索半径</div>';
+                }
+            } catch (error) {
+                console.error('搜索失败:', error);
+                resultsDiv.innerHTML = `<div class="empty-state" style="color: #ff4444;">搜索失败: ${error.message}</div>`;
+            }
+        };
+
+        // 使用当前位置
+        window.useCurrentLocation = function() {
+            if (!navigator.geolocation) {
+                alert('您的浏览器不支持地理定位');
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lng = position.coords.longitude;
+                    const lat = position.coords.latitude;
+
+                    document.getElementById('lng').value = lng;
+                    document.getElementById('lat').value = lat;
+
+                    currentCenter = [lng, lat];
+                    mapUtil.setCenter(currentCenter, 14);
+
+                    // 更新中心点标记
+                    mapUtil.clearMarkers();
+                    mapUtil.addMarker(currentCenter, {
+                        title: '我的位置',
+                        icon: new mapUtil.AMap.Icon({
+                            size: new mapUtil.AMap.Size(30, 40),
+                            image: '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png',
+                            imageSize: new mapUtil.AMap.Size(30, 40)
+                        })
+                    });
+
+                    alert('已定位到您的当前位置');
+                },
+                (error) => {
+                    alert('定位失败: ' + error.message);
+                }
+            );
+        };
+
+        // 清除地图
+        window.clearMap = function() {
+            mapUtil.clearMarkers();
+            document.getElementById('hotel-results').innerHTML = '<div class="empty-state">已清除所有标记</div>';
+
+            // 重新添加中心点
+            if (currentCenter) {
+                mapUtil.addMarker(currentCenter, {
+                    title: '搜索中心',
+                    icon: new mapUtil.AMap.Icon({
+                        size: new mapUtil.AMap.Size(30, 40),
+                        image: '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png',
+                        imageSize: new mapUtil.AMap.Size(30, 40)
+                    })
+                });
+            }
+        };
+
+        // 页面加载时初始化
+        initMap();
+    </script>
+</body>
+</html>

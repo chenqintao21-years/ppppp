@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>景点玩乐 - Tripadvisor</title>
+    <link rel="stylesheet" href="../styles/base/styles.css">
+    <link rel="stylesheet" href="../styles/pages/attractions.css">
+</head>
+<body>
+    <header class="header-attractions">
+        <div class="container">
+            <nav class="navbar-attractions">
+                <div class="nav-left">
+                    <div class="logo">
+                        <a href="index.html">
+                            <svg width="166" height="28" viewBox="0 0 166 28">
+                                <path d="M14 0C6.3 0 0 6.3 0 14s6.3 14 14 14 14-6.3 14-14S21.7 0 14 0zm0 25c-6.1 0-11-4.9-11-11S7.9 3 14 3s11 4.9 11 11-4.9 11-11 11z" fill="#00AA6C"/>
+                                <circle cx="9" cy="14" r="3.5" fill="#00AA6C"/>
+                                <circle cx="19" cy="14" r="3.5" fill="#00AA6C"/>
+                                <text x="32" y="20" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#000">Tripadvisor</text>
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="search-bar-header">
+                        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <input type="text" placeholder="搜索" class="search-input-header">
+                    </div>
+                </div>
+            </nav>
+            <div class="sub-nav">
+                <a href="hotel-page.html" class="sub-nav-link">酒店</a>
+                <a href="attractions.html" class="sub-nav-link active">景点玩乐</a>
+                <a href="restaurant.html" class="sub-nav-link">美食</a>
+                <a href="#" class="sub-nav-link">游船</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <button class="back-button" onclick="window.history.length > 1 ? window.history.back() : window.location.href='index.html'" style="margin: 20px 0 0 24px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            <span>返回</span>
+        </button>
+        <section class="hero-attractions">
+            <div class="hero-image-bg"></div>
+            <div class="hero-overlay"></div>
+            <div class="hero-content-attractions">
+                <h1 class="hero-title-attractions">预订旅行者支持的景点玩乐</h1>
+                <div class="search-box-attractions">
+                    <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input type="text" class="search-input-attractions" placeholder="搜寻体验">
+                </div>
+            </div>
+            <div class="hero-carousel-dots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </section>
+
+        <section class="trending-section">
+            <div class="container">
+                <h2 class="section-title">热门讲座</h2>
+                <div class="trending-carousel">
+                    <!-- 动态加载内容 -->
+                </div>
+            </div>
+        </section>
+
+        <section class="recommendations-section">
+            <div class="container">
+                <h2 class="section-title">为您推荐</h2>
+                <p class="section-subtitle">还有很多事情可以做，我们为您提供最佳选择。</p>
+
+                <div class="recommendations-grid">
+                    <!-- 动态加载内容 -->
+                </div>
+            </div>
+        </section>
+
+        <section class="benefits-section">
+            <div class="container">
+                <div class="benefits-grid">
+                    <!-- 动态加载内容 -->
+                </div>
+            </div>
+        </section>
+
+        <section class="popular-destinations-section">
+            <div class="container">
+                <h2 class="section-title">热门地点的景点推荐的景点玩乐</h2>
+
+                <div class="popular-destinations-grid">
+                    <!-- 动态加载内容 -->
+                </div>
+            </div>
+        </section>
+
+        <section class="explore-categories-section">
+            <div class="container">
+                <h2 class="section-title">按类别探索</h2>
+                <div class="categories-grid">
+                    <!-- 动态加载内容 -->
+                </div>
+            </div>
+        </section>
+
+        <section class="travelers-choice-section">
+            <div class="container">
+                <h2 class="section-title">旅行者之选奖</h2>
+                <p class="section-subtitle">最佳旅行者点评的景点体验，由旅行者们评选</p>
+
+                <div class="travelers-choice-grid">
+                    <!-- 动态加载内容 -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Tripadvisor LLC 版权所有</p>
+        </div>
+    </footer>
+
+    <script src="../data/attractions-data.js"></script>
+    <script src="../pages/attractions/list.js"></script>
+</body>
+</html>

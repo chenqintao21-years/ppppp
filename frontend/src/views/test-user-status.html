@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试用户状态</title>
+    <link rel="stylesheet" href="../styles/base/styles.css">
+    <link rel="stylesheet" href="../styles/components/auth.css">
+</head>
+<body>
+    <h1>用户状态测试</h1>
+
+    <div style="padding: 20px;">
+        <h2>当前状态</h2>
+        <div id="status"></div>
+
+        <h2>导航栏测试</h2>
+        <div style="border: 1px solid #ddd; padding: 20px; margin: 20px 0;">
+            <div id="authButtons" class="auth-buttons">
+                <a href="auth.html" class="auth-link-btn">登录</a>
+                <a href="auth.html?mode=register" class="auth-link-btn register">注册</a>
+            </div>
+            <div id="userMenu" class="user-menu" style="display: none;">
+                <button class="avatar-btn" id="avatarBtn">
+                    <img src="" alt="avatar">
+                </button>
+                <div class="user-dropdown">
+                    <div class="user-info">
+                        <div class="user-name" id="userName"></div>
+                        <div class="user-email" id="userEmail"></div>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <a href="profile.html" class="dropdown-item">我的旅行</a>
+                    <a href="profile.html" class="dropdown-item">简介</a>
+                    <a href="my-bookings.html" class="dropdown-item">预订</a>
+                    <a href="#" class="dropdown-item">消息</a>
+                    <a href="profile.html" class="dropdown-item">帐号信息</a>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item logout-btn" id="logoutBtn">退出</button>
+                </div>
+            </div>
+        </div>
+
+        <button onclick="testInit()" style="padding: 10px 20px; margin: 10px;">测试 initAuth()</button>
+        <button onclick="checkStorage()" style="padding: 10px 20px; margin: 10px;">检查 Storage</button>
+    </div>
+
+    <script type="module">
+        import { authService } from '../services/auth.js';
+        import { initAuth } from '../utils/auth.js';
+
+        const status = document.getElementById('status');
+
+        function updateStatus() {
+            const isAuth = authService.isAuthenticated();
+            const token = authService.getToken();
+            const user = authService.getUser();
+
+            status.innerHTML = `
+                <p><strong>是否登录:</strong> ${isAuth ? '是' : '否'}</p>
+                <p><strong>Token:</strong> ${token ? token.substring(0, 30) + '...' : '无'}</p>
+                <p><strong>用户信息:</strong> ${user ? JSON.stringify(user, null, 2) : '无'}</p>
+                <p><strong>authButtons display:</strong> ${document.getElementById('authButtons').style.display}</p>
+                <p><strong>userMenu display:</strong> ${document.getElementById('userMenu').style.display}</p>
+            `;
+        }
+
+        window.testInit = function() {
+            console.log('调用 initAuth()...');
+            initAuth();
+            setTimeout(updateStatus, 100);
+        };
+
+        window.checkStorage = function() {
+            console.log('localStorage:', localStorage);
+            console.log('sessionStorage:', sessionStorage);
+            console.log('authToken (local):', localStorage.getItem('authToken'));
+            console.log('authToken (session):', sessionStorage.getItem('authToken'));
+            console.log('user (local):', localStorage.getItem('user'));
+            console.log('user (session):', sessionStorage.getItem('user'));
+            updateStatus();
+        };
+
+        // 页面加载时
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOMContentLoaded 触发');
+            updateStatus();
+            console.log('调用 initAuth()...');
+            initAuth();
+            setTimeout(updateStatus, 100);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tripadvisor</title>
+    <link rel="stylesheet" href="../styles/base/styles.css">
+    <link rel="stylesheet" href="../styles/components/auth.css">
+</head>
+<body>
+    <header class="header" id="header">
+        <div class="header-top">
+            <div class="container">
+                <nav class="navbar">
+                    <div class="logo">
+                        <svg width="166" height="28" viewBox="0 0 166 28">
+                            <path d="M14 0C6.3 0 0 6.3 0 14s6.3 14 14 14 14-6.3 14-14S21.7 0 14 0zm0 25c-6.1 0-11-4.9-11-11S7.9 3 14 3s11 4.9 11 11-4.9 11-11 11z" fill="#00AA6C"/>
+                            <circle cx="9" cy="14" r="3.5" fill="#00AA6C"/>
+                            <circle cx="19" cy="14" r="3.5" fill="#00AA6C"/>
+                            <text x="32" y="20" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#000">Tripadvisor</text>
+                        </svg>
+                    </div>
+                    <div class="nav-right">
+                        <a href="#" class="nav-link">发现</a>
+                        <a href="#" class="nav-link">点评</a>
+                        <button class="icon-btn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="2" y1="12" x2="22" y2="12"></line>
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                            </svg>
+                        </button>
+                        <span class="currency">USD</span>
+                        <div id="authButtons" class="auth-buttons">
+                            <a href="auth.html" class="auth-link-btn">登录</a>
+                            <a href="auth.html?mode=register" class="auth-link-btn register">注册</a>
+                        </div>
+                        <div id="userMenu" class="user-menu" style="display: none;">
+                            <button class="avatar-btn" id="avatarBtn">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23ff6b6b'/%3E%3C/svg%3E" alt="avatar">
+                            </button>
+                            <div class="user-dropdown">
+                                <div class="user-info">
+                                    <div class="user-name" id="userName"></div>
+                                    <div class="user-email" id="userEmail"></div>
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <a href="profile.html" class="dropdown-item">我的旅行</a>
+                                <a href="profile.html" class="dropdown-item">简介</a>
+                                <a href="my-bookings.html" class="dropdown-item">预订</a>
+                                <a href="#" class="dropdown-item">消息</a>
+                                <a href="profile.html" class="dropdown-item">帐号信息</a>
+                                <div class="dropdown-divider"></div>
+                                <button class="dropdown-item logout-btn" id="logoutBtn">退出</button>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+
+        <div class="header-scrolled" id="headerScrolled">
+            <div class="container">
+                <nav class="navbar-scrolled">
+                    <div class="logo">
+                        <svg width="166" height="28" viewBox="0 0 166 28">
+                            <path d="M14 0C6.3 0 0 6.3 0 14s6.3 14 14 14 14-6.3 14-14S21.7 0 14 0zm0 25c-6.1 0-11-4.9-11-11S7.9 3 14 3s11 4.9 11 11-4.9 11-11 11z" fill="#00AA6C"/>
+                            <circle cx="9" cy="14" r="3.5" fill="#00AA6C"/>
+                            <circle cx="19" cy="14" r="3.5" fill="#00AA6C"/>
+                            <text x="32" y="20" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#000">Tripadvisor</text>
+                        </svg>
+                    </div>
+                    <div class="search-bar-compact">
+                        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <input type="text" placeholder="搜索" class="search-input-compact">
+                    </div>
+                    <div class="nav-tabs">
+                        <a href="hotel-page.html" class="nav-tab">酒店</a>
+                        <a href="attractions.html" class="nav-tab">景点玩乐</a>
+                        <a href="restaurant.html" class="nav-tab">美食</a>
+                        <a href="#" class="nav-tab">游船</a>
+                    </div>
+                    <div class="nav-right">
+                        <a href="#" class="nav-link">发现</a>
+                        <a href="#" class="nav-link">点评</a>
+                        <button class="icon-btn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="2" y1="12" x2="22" y2="12"></line>
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                            </svg>
+                        </button>
+                        <span class="currency">USD</span>
+                        <div id="authButtonsScrolled" class="auth-buttons">
+                            <a href="auth.html" class="auth-link-btn">登录</a>
+                            <a href="auth.html?mode=register" class="auth-link-btn register">注册</a>
+                        </div>
+                        <div id="userMenuScrolled" class="user-menu" style="display: none;">
+                            <button class="avatar-btn" id="avatarBtnScrolled">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23ff6b6b'/%3E%3C/svg%3E" alt="avatar">
+                            </button>
+                            <div class="user-dropdown">
+                                <div class="user-info">
+                                    <div class="user-name" id="userNameScrolled"></div>
+                                    <div class="user-email" id="userEmailScrolled"></div>
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <a href="profile.html" class="dropdown-item">我的旅行</a>
+                                <a href="profile.html" class="dropdown-item">简介</a>
+                                <a href="my-bookings.html" class="dropdown-item">预订</a>
+                                <a href="#" class="dropdown-item">消息</a>
+                                <a href="profile.html" class="dropdown-item">帐号信息</a>
+                                <div class="dropdown-divider"></div>
+                                <button class="dropdown-item logout-btn" id="logoutBtnScrolled">退出</button>
+                            </div>
+                        </div>
+                    </div>
+                </nav-scrolled>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">去哪里？</h1>
+
+                <div class="search-tabs-hero">
+                    <button class="tab-hero active" data-tab="all">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                        <span>搜索全部</span>
+                    </button>
+                    <button class="tab-hero" data-tab="hotels">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        </svg>
+                        <span>酒店</span>
+                    </button>
+                    <button class="tab-hero" data-tab="attractions">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M12 6v6l4 2"></path>
+                        </svg>
+                        <span>景点玩乐</span>
+                    </button>
+                    <button class="tab-hero" data-tab="restaurants">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
+                        </svg>
+                        <span>美食</span>
+                    </button>
+                </div>
+
+                <div class="search-box-hero">
+                    <svg class="search-icon-hero" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input type="text" class="search-input-hero" placeholder="景点玩乐、酒店...">
+                    <button class="search-btn-hero">查询</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="featured-section">
+            <div class="container">
+                <div class="featured-promo-with-image">
+                    <div class="promo-image-inset">
+                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop" alt="景点" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 600%22%3E%3Cdefs%3E%3ClinearGradient id=%22grad%22 x1=%220%25%22 y1=%220%25%22 x2=%22100%25%22 y2=%22100%25%22%3E%3Cstop offset=%220%25%22 style=%22stop-color:%23ff6b35;stop-opacity:1%22 /%3E%3Cstop offset=%22100%25%22 style=%22stop-color:%23f7931e;stop-opacity:1%22 /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill=%22url(%23grad)%22 width=%22800%22 height=%22600%22/%3E%3C/svg%3E'">
+                    </div>
+                    <div class="promo-content">
+                        <h2>选找可满足您的<br>景点玩乐</h2>
+                        <p>预订精选景点门票，无需排队</p>
+                        <button class="promo-btn">立即预订</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="container">
+                <h2 class="section-title">热门推荐目的地</h2>
+                <p class="section-subtitle">来自旅行者的热门推荐</p>
+
+                <div class="cards-grid-4" id="destinationsGrid">
+                    <!-- 动态加载城市数据 -->
+                    <div class="loading-placeholder">加载中...</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section bg-light">
+            <div class="container">
+                <h2 class="section-title">热门景点</h2>
+
+                <div class="cards-grid-4" id="attractionsGrid">
+                    <!-- 动态加载景点数据 -->
+                    <div class="loading-placeholder">加载中...</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Tripadvisor LLC 版权所有</p>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { initAuth } from '../utils/auth.js';
+
+        // 初始化认证状态
+        document.addEventListener('DOMContentLoaded', () => {
+            initAuth();
+        });
+    </script>
+    <script src="../pages/home.js"></script>
+</body>
+</html>

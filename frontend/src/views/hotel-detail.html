@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>酒店详情 - Tripadvisor</title>
+    <link rel="stylesheet" href="../styles/base/styles.css">
+    <link rel="stylesheet" href="../styles/pages/hotel-detail.css">
+</head>
+<body>
+    <header class="header-detail">
+        <div class="container">
+            <nav class="navbar-detail">
+                <div class="nav-left">
+                    <div class="logo">
+                        <a href="index.html">
+                            <svg width="166" height="28" viewBox="0 0 166 28">
+                                <path d="M14 0C6.3 0 0 6.3 0 14s6.3 14 14 14 14-6.3 14-14S21.7 0 14 0zm0 25c-6.1 0-11-4.9-11-11S7.9 3 14 3s11 4.9 11 11-4.9 11-11 11z" fill="#00AA6C"/>
+                                <circle cx="9" cy="14" r="3.5" fill="#00AA6C"/>
+                                <circle cx="19" cy="14" r="3.5" fill="#00AA6C"/>
+                                <text x="32" y="20" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#000">Tripadvisor</text>
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="search-bar-header">
+                        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <input type="text" placeholder="搜索" class="search-input-header">
+                    </div>
+                </div>
+            </nav>
+            <div class="sub-nav">
+                <a href="hotel-page.html" class="sub-nav-link active">酒店</a>
+                <a href="attractions.html" class="sub-nav-link">景点玩乐</a>
+                <a href="restaurant.html" class="sub-nav-link">美食</a>
+                <a href="#" class="sub-nav-link">游船</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="hotel-detail-main">
+        <!-- 酒店标题区域 -->
+        <section class="hotel-header">
+            <div class="container">
+                <div class="breadcrumb">
+                    <button class="back-button" onclick="window.history.length > 1 ? window.history.back() : window.location.href='index.html'">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        <span>返回</span>
+                    </button>
+                    <a href="index.html">首页</a>
+                    <span>/</span>
+                    <a href="hotel-page.html">酒店</a>
+                    <span>/</span>
+                    <span id="hotelNameBreadcrumb">加载中...</span>
+                </div>
+                <h1 class="hotel-name" id="hotelName">加载中...</h1>
+                <div class="hotel-meta">
+                    <div class="rating-section">
+                        <div class="rating-bubbles" id="ratingBubbles">
+                            <!-- 评分气泡将通过JS动态加载 -->
+                        </div>
+                        <span class="review-count" id="reviewCount">0 条点评</span>
+                    </div>
+                    <div class="hotel-location" id="hotelLocation">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        <span>加载中...</span>
+                    </div>
+                </div>
+                <div class="hotel-actions">
+                    <button class="action-btn favorite-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                        <span>保存</span>
+                    </button>
+                    <button class="action-btn share-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="18" cy="5" r="3"></circle>
+                            <circle cx="6" cy="12" r="3"></circle>
+                            <circle cx="18" cy="19" r="3"></circle>
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                        </svg>
+                        <span>分享</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 图片画廊 -->
+        <section class="photo-gallery">
+            <div class="container">
+                <div class="gallery-grid" id="photoGallery">
+                    <!-- 图片将通过JS动态加载 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 主要内容区域 -->
+        <section class="main-content">
+            <div class="container">
+                <div class="content-layout">
+                    <!-- 左侧内容 -->
+                    <div class="content-left">
+                        <!-- 关于此酒店 -->
+                        <div class="section-card">
+                            <h2>关于</h2>
+                            <p class="hotel-description" id="hotelDescription">加载中...</p>
+                        </div>
+
+                        <!-- 便利设施 -->
+                        <div class="section-card">
+                            <h2>便利设施</h2>
+                            <div class="amenities-grid" id="amenitiesList">
+                                <!-- 便利设施将通过JS动态加载 -->
+                            </div>
+                        </div>
+
+                        <!-- 房型选择 -->
+                        <div class="section-card">
+                            <h2>选择房间</h2>
+                            <div class="room-types" id="roomTypesList">
+                                <!-- 房型将通过JS动态加载 -->
+                            </div>
+                        </div>
+
+                        <!-- 位置 -->
+                        <div class="section-card">
+                            <h2>位置</h2>
+                            <div class="location-info">
+                                <div class="map-placeholder" id="mapPlaceholder">
+                                    <!-- 地图将通过JS动态加载 -->
+                                </div>
+                                <p class="address" id="hotelAddress">加载中...</p>
+                            </div>
+                        </div>
+
+                        <!-- 点评 -->
+                        <div class="section-card">
+                            <h2>点评</h2>
+                            <div class="reviews-summary">
+                                <div class="rating-score">
+                                    <span class="score" id="ratingScore">0.0</span>
+                                    <div class="rating-bubbles-large" id="ratingBubblesLarge">
+                                        <!-- 大评分气泡将通过JS动态加载 -->
+                                    </div>
+                                </div>
+                                <div class="rating-breakdown" id="ratingBreakdown">
+                                    <!-- 评分细分将通过JS动态加载 -->
+                                </div>
+                            </div>
+                            <div class="reviews-list" id="reviewsList">
+                                <!-- 点评将通过JS动态加载 -->
+                            </div>
+                            <button class="load-more-btn">查看更多点评</button>
+                        </div>
+                    </div>
+
+                    <!-- 右侧预订卡片 -->
+                    <div class="content-right">
+                        <div class="booking-card sticky">
+                            <div class="price-section">
+                                <span class="price-label">起价</span>
+                                <span class="price-amount" id="priceAmount">¥0</span>
+                                <span class="price-unit">每晚</span>
+                            </div>
+                            <div class="booking-form">
+                                <div class="form-group">
+                                    <label>入住日期</label>
+                                    <input type="date" class="form-input" id="checkInDate">
+                                </div>
+                                <div class="form-group">
+                                    <label>退房日期</label>
+                                    <input type="date" class="form-input" id="checkOutDate">
+                                </div>
+                                <div class="form-group">
+                                    <label>客人</label>
+                                    <select class="form-input" id="guestCount">
+                                        <option value="1">1位客人</option>
+                                        <option value="2">2位客人</option>
+                                        <option value="3">3位客人</option>
+                                        <option value="4">4位客人</option>
+                                    </select>
+                                </div>
+                                <button class="book-btn" id="bookBtn">预订</button>
+                            </div>
+                            <div class="booking-note">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                </svg>
+                                <span>预订时不收费</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Tripadvisor LLC 版权所有</p>
+        </div>
+    </footer>
+
+    <script type="module" src="../pages/hotels/detail.js"></script>
+</body>
+</html>

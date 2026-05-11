@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>酒店API测试</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background: #1e3a1e;
+            border-left: 4px solid #4caf50;
+        }
+        .error {
+            background: #3a1e1e;
+            border-left: 4px solid #f44336;
+        }
+        .info {
+            background: #1e2a3a;
+            border-left: 4px solid #2196f3;
+        }
+        h1 {
+            color: #4caf50;
+        }
+        pre {
+            background: #2d2d2d;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 高德地图酒店API测试</h1>
+    <div id="results"></div>
+
+    <script type="module">
+        import mapUtil from './map.js';
+
+        const resultsDiv = document.getElementById('results');
+
+        function log(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = message;
+            resultsDiv.appendChild(div);
+        }
+
+        async function runTests() {
+            log('开始测试...', 'info');
+
+            try {
+                // 测试1: 加载地图API
+                log('📦 测试1: 加载高德地图API', 'info');
+                await mapUtil.loadMapScript();
+                log('✅ 地图API加载成功', 'success');
+
+                // 测试2: 搜索北京天安门附近的酒店
+                log('🔍 测试2: 搜索北京天安门附近酒店（半径3km）', 'info');
+                const center = [116.397428, 39.90923]; // 天安门
+                const hotels = await mapUtil.searchNearbyHotels(center, {
+                    radius: 3000,
+                    pageSize: 10
+                });
+
+                if (hotels && hotels.length > 0) {
+                    log(`✅ 找到 ${hotels.length} 家酒店`, 'success');
+
+                    // 显示前3个结果
+                    log('📋 前3个搜索结果:', 'info');
+                    hotels.slice(0, 3).forEach((hotel, index) => {
+                        log(`<pre>${index + 1}. ${hotel.name}
+   地址: ${hotel.address}
+   电话: ${hotel.tel}
+   距离: ${mapUtil.formatDistance(hotel.distance)}
+   坐标: [${hotel.location.lng}, ${hotel.location.lat}]</pre>`, 'success');
+                    });
+
+                    // 测试3: 验证数据结构
+                    log('🔬 测试3: 验证数据结构', 'info');
+                    const firstHotel = hotels[0];
+                    const requiredFields = ['id', 'name', 'address', 'location', 'tel', 'distance'];
+                    const missingFields = requiredFields.filter(field => !(field in firstHotel));
+
+                    if (missingFields.length === 0) {
+                        log('✅ 数据结构完整，包含所有必需字段', 'success');
+                    } else {
+                        log(`❌ 缺少字段: ${missingFields.join(', ')}`, 'error');
+                    }
+
+                    // 测试4: 验证距离计算
+                    log('📏 测试4: 验证距离计算', 'info');
+                    const distance = firstHotel.distance;
+                    if (distance > 0 && distance <= 3000) {
+                        log(`✅ 距离计算正确: ${mapUtil.formatDistance(distance)} (在搜索半径内)`, 'success');
+                    } else {
+                        log(`⚠️ 距离: ${mapUtil.formatDistance(distance)} (可能超出搜索半径)`, 'info');
+                    }
+
+                    // 测试5: 测试不同半径
+                    log('🎯 测试5: 测试不同搜索半径', 'info');
+                    const hotels1km = await mapUtil.searchNearbyHotels(center, { radius: 1000, pageSize: 5 });
+                    const hotels5km = await mapUtil.searchNearbyHotels(center, { radius: 5000, pageSize: 5 });
+                    log(`✅ 1km半径: ${hotels1km.length} 家酒店`, 'success');
+                    log(`✅ 5km半径: ${hotels5km.length} 家酒店`, 'success');
+
+                    // 测试6: 测试上海地区
+                    log('🌏 测试6: 测试上海外滩附近酒店', 'info');
+                    const shanghaiCenter = [121.4905, 31.2397]; // 上海外滩
+                    const shanghaiHotels = await mapUtil.searchNearbyHotels(shanghaiCenter, {
+                        radius: 2000,
+                        pageSize: 5
+                    });
+                    log(`✅ 上海找到 ${shanghaiHotels.length} 家酒店`, 'success');
+                    if (shanghaiHotels.length > 0) {
+                        log(`<pre>示例: ${shanghaiHotels[0].name}
+   地址: ${shanghaiHotels[0].address}</pre>`, 'success');
+                    }
+
+                    log('🎉 所有测试完成！', 'success');
+
+                } else {
+                    log('❌ 未找到酒店数据', 'error');
+                }
+
+            } catch (error) {
+                log(`❌ 测试失败: ${error.message}`, 'error');
+                log(`<pre>${error.stack}</pre>`, 'error');
+            }
+        }
+
+        // 运行测试
+        runTests();
+    </script>
+</body>
+</html>

@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>酒店预订 - 旅行网站</title>
+    <link rel="stylesheet" href="../styles/pages/hotel-page.css">
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="header header-top">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo">
+                    <a href="index.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: inherit; cursor: pointer;">
+                        <svg width="24" height="24" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="12" cy="12" r="3" fill="currentColor"/>
+                        </svg>
+                        <span>TripAdvisor</span>
+                    </a>
+                </div>
+
+                <div class="search-bar">
+                    <input type="text" placeholder="搜索">
+                </div>
+
+            </div>
+
+            <div class="sub-nav">
+                <a href="hotel-page.html" class="sub-nav-link active">酒店</a>
+                <a href="attractions.html" class="sub-nav-link">景点玩乐</a>
+                <a href="restaurant.html" class="sub-nav-link">美食</a>
+                <a href="#" class="sub-nav-link">游轮</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 滚动时显示的导航栏 -->
+    <div class="header-scrolled">
+        <div class="container">
+            <nav class="navbar-scrolled">
+                <div class="logo">
+                    <a href="index.html">
+                        <svg width="166" height="28" viewBox="0 0 166 28">
+                            <path d="M14 0C6.3 0 0 6.3 0 14s6.3 14 14 14 14-6.3 14-14S21.7 0 14 0zm0 25c-6.1 0-11-4.9-11-11S7.9 3 14 3s11 4.9 11 11-4.9 11-11 11z" fill="#00AA6C"/>
+                            <circle cx="9" cy="14" r="3.5" fill="#00AA6C"/>
+                            <circle cx="19" cy="14" r="3.5" fill="#00AA6C"/>
+                            <text x="32" y="20" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#000">Tripadvisor</text>
+                        </svg>
+                    </a>
+                </div>
+                <div class="search-bar-compact">
+                    <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input type="text" placeholder="搜索" class="search-input-compact">
+                </div>
+                <div class="nav-tabs">
+                    <a href="hotel-page.html" class="nav-tab active">酒店</a>
+                    <a href="attractions.html" class="nav-tab">景点玩乐</a>
+                    <a href="restaurant.html" class="nav-tab">美食</a>
+                    <a href="#" class="nav-tab">游船</a>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <!-- 英雄区域 -->
+    <section class="hero">
+        <button class="back-button" onclick="window.history.length > 1 ? window.history.back() : window.location.href='index.html'" style="position: absolute; top: 20px; left: 24px; z-index: 10;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            <span>返回</span>
+        </button>
+        <div class="hero-image">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='400'%3E%3Crect fill='%23334455' width='1200' height='400'/%3E%3C/svg%3E" alt="Hero">
+            <div class="hero-content">
+                <h1>查找旅行者喜爱的酒店</h1>
+                <div class="search-box">
+                    <input type="text" placeholder="搜索名称或目的地">
+                    <button class="search-btn">🔍</button>
+                </div>
+            </div>
+            <div class="hero-info">
+                <span>作者：@traveluser</span>
+            </div>
+            <div class="hero-dots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 特色功能 -->
+    <section class="features">
+        <div class="container">
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <h3>旅行者之选</h3>
+                    <p>探索旅行者最喜爱的酒店</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3>适合各类预算的酒店</h3>
+                    <p>通过搜索各类，获取以超过200万家酒店中的最佳价格，找到最适合的酒店</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>全网最优惠价格</h3>
+                    <p>比较200多个订房网站的价格，以最便宜的价格预订酒店</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 旅行者之选 -->
+    <section class="travelers-choice">
+        <div class="container">
+            <div class="section-header">
+                <h2>旅行者之选：热门酒店</h2>
+                <a href="#" class="view-all">查看全部</a>
+            </div>
+            <p class="section-subtitle">跻身于旅行者评选的前25名，高达2.5%</p>
+
+            <div class="hotel-carousel">
+                <button class="carousel-btn prev">‹</button>
+                <div class="hotel-grid">
+                    <div class="hotel-card" data-hotel-id="1">
+                        <div class="hotel-image">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Crect fill='%23DDDDDD' width='300' height='200'/%3E%3C/svg%3E" alt="Hotel">
+                            <button class="favorite-btn">♡</button>
+                            <span class="badge travelers-choice">旅行者之选</span>
+                        </div>
+                        <div class="hotel-info">
+                            <div class="rank">1</div>
+                            <div class="hotel-details">
+                                <h3>La Siesta Classic Ma May Hotel</h3>
+                                <div class="rating">
+                                    <span class="stars">●●●●●</span>
+                                    <span class="reviews">(2,771)</span>
+                                </div>
+                                <div class="price">
+                                    <span class="from">起价</span>
+                                    <span class="amount">US$187</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hotel-card" data-hotel-id="2">
+                        <div class="hotel-image">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Crect fill='%23CCDDEE' width='300' height='200'/%3E%3C/svg%3E" alt="Hotel">
+                            <button class="favorite-btn">♡</button>
+                            <span class="badge travelers-choice">旅行者之选</span>
+                        </div>
+                        <div class="hotel-info">
+                            <div class="rank">2</div>
+                            <div class="hotel-details">
+                                <h3>Jaya House River Park</h3>
+                                <div class="rating">
+                                    <span class="stars">●●●●●</span>
+                                    <span class="reviews">(5,129)</span>
+                                </div>
+                                <div class="price">
+                                    <span class="from">起价</span>
+                                    <span class="amount">US$206</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hotel-card" data-hotel-id="3">
+                        <div class="hotel-image">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Crect fill='%23BBCCDD' width='300' height='200'/%3E%3C/svg%3E" alt="Hotel">
+                            <button class="favorite-btn">♡</button>
+                            <span class="badge travelers-choice">旅行者之选</span>
+                        </div>
+                        <div class="hotel-info">
+                            <div class="rank">3</div>
+                            <div class="hotel-details">
+                                <h3>度假酒店</h3>
+                                <div class="rating">
+                                    <span class="stars">●●●●●</span>
+                                    <span class="reviews">(7,711)</span>
+                                </div>
+                                <div class="price">
+                                    <span class="from">起价</span>
+                                    <span class="amount">US$251</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hotel-card" data-hotel-id="4">
+                        <div class="hotel-image">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Crect fill='%23AABBCC' width='300' height='200'/%3E%3C/svg%3E" alt="Hotel">
+                            <button class="favorite-btn">♡</button>
+                            <span class="badge travelers-choice">旅行者之选</span>
+                        </div>
+                        <div class="hotel-info">
+                            <div class="rank">4</div>
+                            <div class="hotel-details">
+                                <h3>The Kayon Jungle Resort</h3>
+                                <div class="rating">
+                                    <span class="stars">●●●●●</span>
+                                    <span class="reviews">(3,512)</span>
+                                </div>
+                                <div class="price">
+                                    <span class="from">起价</span>
+                                    <span class="amount">US$347</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-btn next">›</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 最近浏览 -->
+    <section class="recent-views">
+        <div class="container">
+            <h2>最近浏览</h2>
+            <div class="recent-carousel">
+                <div class="recent-card">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='100'%3E%3Crect fill='%23DDDDDD' width='150' height='100'/%3E%3C/svg%3E" alt="Recent">
+                    <div class="recent-info">
+                        <h4>巴黎大教堂和埃菲尔铁塔徒步游</h4>
+                        <div class="rating">●●●●●</div>
+                    </div>
+                </div>
+                <div class="recent-card">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='100'%3E%3Crect fill='%23CCCCCC' width='150' height='100'/%3E%3C/svg%3E" alt="Recent">
+                    <div class="recent-info">
+                        <h4>内罗毕国家博物馆(回程)</h4>
+                        <div class="rating">●●●●●</div>
+                        <span class="badge">可立即确认</span>
+                    </div>
+                </div>
+                <div class="recent-card">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='100'%3E%3Crect fill='%23BBBBBB' width='150' height='100'/%3E%3C/svg%3E" alt="Recent">
+                    <div class="recent-info">
+                        <h4>美国</h4>
+                        <div class="rating">●●●●●</div>
+                    </div>
+                </div>
+                <button class="carousel-btn next">›</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 亚洲最佳酒店 -->
+    <section class="asia-hotels">
+        <div class="container">
+            <h2>亚洲最佳酒店</h2>
+            <p class="section-subtitle">探索亚洲最佳酒店</p>
+
+            <div class="destination-grid">
+                <div class="destination-card large">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%2387CEEB' width='400' height='300'/%3E%3C/svg%3E" alt="Destination">
+                    <div class="destination-info">
+                        <h3>福冈的最佳长期住宿酒店：年度旅行者之选</h3>
+                        <div class="rating">
+                            <span class="stars">●●●●●</span>
+                            <span class="reviews">(1,670)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="destination-card">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Crect fill='%23FFB347' width='300' height='300'/%3E%3C/svg%3E" alt="Destination">
+                    <div class="destination-info">
+                        <h3>曼谷大皇宫和寺庙半日游：年度旅行者之选</h3>
+                        <div class="rating">
+                            <span class="stars">●●●●●</span>
+                            <span class="reviews">(137)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="destination-card">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Crect fill='%23DDA15E' width='300' height='300'/%3E%3C/svg%3E" alt="Destination">
+                    <div class="destination-info">
+                        <h3>3小时摩托车半日游之旅：前往曼谷的寺庙</h3>
+                    </div>
+                </div>
+
+                <div class="destination-card">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Crect fill='%23BC6C25' width='300' height='300'/%3E%3C/svg%3E" alt="Destination">
+                    <div class="destination-info">
+                        <h3>曼谷寺庙和城市风光骑行游</h3>
+                        <div class="rating">
+                            <span class="stars">●●●●●</span>
+                            <span class="reviews">(520)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 全包式度假酒店 -->
+    <section class="all-inclusive">
+        <div class="container">
+            <div class="section-header">
+                <h2>旅行者之选：全包式度假酒店</h2>
+                <a href="#" class="view-all">查看全部</a>
+            </div>
+
+            <div class="hotel-carousel">
+                <button class="carousel-btn prev">‹</button>
+                <div class="hotel-grid-small">
+                    <div class="hotel-card-small" data-hotel-id="5">
+                        <div class="hotel-image">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Crect fill='%2387CEEB' width='300' height='200'/%3E%3C/svg%3E" alt="Hotel">
+                            <button class="favorite-btn">♡</button>
+                            <span class="badge travelers-choice">旅行者之选</span>
+                        </div>
+                        <div class="hotel-info">
+                            <h3>Casa Dorada</h3>
+                            <div class="rating">
+                                <span class="stars">●●●●●</span>
+                                <span class="reviews">(4,572)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hotel-card-small" data-hotel-id="6">
+                        <div class="hotel-image">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Crect fill='%2366B2B2' width='300' height='200'/%3E%3C/svg%3E" alt="Hotel">
+                            <button class="favorite-btn">♡</button>
+                            <span class="badge travelers-choice">旅行者之选</span>
+                        </div>
+                        <div class="hotel-info">
+                            <h3>度假酒店</h3>
+                            <div class="rating">
+                                <span class="stars">●●●●●</span>
+                                <span class="reviews">(13,104)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hotel-card-small" data-hotel-id="7">
+                        <div class="hotel-image">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Crect fill='%23AABBCC' width='300' height='200'/%3E%3C/svg%3E" alt="Hotel">
+                            <button class="favorite-btn">♡</button>
+                        </div>
+                        <div class="hotel-info">
+                            <h3>Voyage Sorgun</h3>
+                            <div class="rating">
+                                <span class="stars">●●●●●</span>
+                                <span class="reviews">(10,730)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hotel-card-small" data-hotel-id="8">
+                        <div class="hotel-image">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Crect fill='%23DDDDDD' width='300' height='200'/%3E%3C/svg%3E" alt="Hotel">
+                            <button class="favorite-btn">♡</button>
+                        </div>
+                        <div class="hotel-info">
+                            <h3>希尔顿钻石度假酒店</h3>
+                            <div class="rating">
+                                <span class="stars">●●●●●</span>
+                                <span class="reviews">(18,360)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-btn next">›</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 热门酒店 -->
+    <section class="popular-hotels">
+        <div class="container">
+            <h2>酒店点评：我附近的酒店</h2>
+            <p class="section-subtitle">旅行搜索的酒店 — 查找您附近的酒店或理想的旅游地</p>
+
+            <div class="hotel-links">
+                <!-- 动态加载的链接将在这里渲染 -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="#">酒店</a>
+                <a href="#">景点玩乐</a>
+                <a href="#">美食</a>
+                <a href="#">游轮</a>
+            </div>
+            <div class="footer-info">
+                <p>© 2026 TripAdvisor LLC 版权所有</p>
+                <div class="footer-meta">
+                    <select class="currency-select">
+                        <option>US$ USD</option>
+                    </select>
+                    <select class="language-select">
+                        <option>中文(简体)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        // 自动定位并导入城市数据（已禁用）
+        import { initAutoLocationImport } from '../services/autoLocationImport.js';
+
+        // 页面加载时自动执行（已禁用）
+        // initAutoLocationImport({ autoStart: true, silent: false });
+
+        // 监听城市数据导入完成事件
+        window.addEventListener('cityDataImported', (event) => {
+            const { city, data } = event.detail;
+            console.log('城市数据已导入:', city, data);
+
+            // 重新加载酒店数据
+            if (typeof loadPopularHotels === 'function') {
+                loadPopularHotels(city);
+            }
+        });
+    </script>
+    <script src="../pages/hotels/index.js"></script>
+    <script src="../utils/scrollNav.js"></script>
+</body>
+</html>

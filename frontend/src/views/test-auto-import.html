@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自动导入功能测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        button {
+            padding: 10px 20px;
+            background: #00aa6c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background: #008c5a;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .log {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .log-item {
+            margin-bottom: 8px;
+            padding: 5px;
+            border-left: 3px solid #00aa6c;
+            padding-left: 10px;
+        }
+        .log-item.error {
+            border-left-color: #e74c3c;
+            color: #e74c3c;
+        }
+        .log-item.success {
+            border-left-color: #00aa6c;
+            color: #00aa6c;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status.pending {
+            background: #f39c12;
+            color: white;
+        }
+        .status.success {
+            background: #00aa6c;
+            color: white;
+        }
+        .status.error {
+            background: #e74c3c;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 自动导入功能测试</h1>
+
+    <div class="test-section">
+        <h2>1. 测试后端API连接</h2>
+        <button type="button" onclick="testBackendConnection(); return false;">测试后端连接</button>
+        <button type="button" onclick="testCityLocationAPI(); return false;">测试定位API</button>
+        <button type="button" onclick="testCitySearchAPI(); return false;">测试搜索API</button>
+        <div id="apiTestLog" class="log"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. 测试自动定位和导入</h2>
+        <button type="button" onclick="testAutoImport(); return false;">开始自动导入测试</button>
+        <button type="button" onclick="testManualImport(); return false;">手动导入北京</button>
+        <button type="button" onclick="clearCache(); return false;">清除缓存</button>
+        <div id="importTestLog" class="log"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. 测试数据查询</h2>
+        <button type="button" onclick="testQueryHotels(); return false;">查询酒店数据</button>
+        <button type="button" onclick="testQueryAttractions(); return false;">查询景点数据</button>
+        <button type="button" onclick="testQueryRestaurants(); return false;">查询餐厅数据</button>
+        <div id="queryTestLog" class="log"></div>
+    </div>
+
+    <script type="module">
+        const API_BASE = 'http://localhost:3000/api';
+
+        function addLog(containerId, message, type = 'info') {
+            const container = document.getElementById(containerId);
+            const logItem = document.createElement('div');
+            logItem.className = `log-item ${type}`;
+            logItem.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            container.appendChild(logItem);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // 阻止所有默认行为
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName === 'BUTTON') {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        });
+
+        // 测试后端连接
+        window.testBackendConnection = async function() {
+            const logId = 'apiTestLog';
+            addLog(logId, '测试后端连接...', 'info');
+
+            try {
+                const response = await fetch(`${API_BASE}/../health`);
+                const data = await response.json();
+
+                if (data.success) {
+                    addLog(logId, '✓ 后端连接成功！', 'success');
+                    addLog(logId, `服务器状态: ${data.status}`, 'success');
+                } else {
+                    addLog(logId, '✗ 后端连接失败', 'error');
+                }
+            } catch (error) {
+                addLog(logId, `✗ 连接错误: ${error.message}`, 'error');
+            }
+        };
+
+        // 测试定位API
+        window.testCityLocationAPI = async function() {
+            const logId = 'apiTestLog';
+            addLog(logId, '测试定位API...', 'info');
+
+            try {
+                const response = await fetch(`${API_BASE}/city/location`);
+                const data = await response.json();
+
+                if (data.success) {
+                    addLog(logId, `✓ 定位成功: ${data.data.city}`, 'success');
+                    addLog(logId, `省份: ${data.data.province}`, 'info');
+                } else {
+                    addLog(logId, '✗ 定位失败', 'error');
+                }
+            } catch (error) {
+                addLog(logId, `✗ API错误: ${error.message}`, 'error');
+            }
+        };
+
+        // 测试搜索API
+        window.testCitySearchAPI = async function() {
+            const logId = 'apiTestLog';
+            addLog(logId, '测试搜索API（搜索"北京"）...', 'info');
+
+            try {
+                const response = await fetch(`${API_BASE}/city/search`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: '北京' })
+                });
+                const data = await response.json();
+
+                if (data.success && data.data.length > 0) {
+                    addLog(logId, `✓ 搜索成功，找到 ${data.data.length} 个结果`, 'success');
+                    addLog(logId, `第一个结果: ${data.data[0].name}`, 'info');
+                } else {
+                    addLog(logId, '✗ 搜索失败或无结果', 'error');
+                }
+            } catch (error) {
+                addLog(logId, `✗ API错误: ${error.message}`, 'error');
+            }
+        };
+
+        // 测试自动导入
+        window.testAutoImport = async function() {
+            const logId = 'importTestLog';
+            addLog(logId, '开始自动导入测试...', 'info');
+
+            try {
+                // 动态导入服务
+                const { autoLocationImportService } = await import('../services/autoLocationImport.js');
+
+                addLog(logId, '✓ 服务加载成功', 'success');
+                addLog(logId, '正在定位...', 'info');
+
+                const result = await autoLocationImportService.autoLocationAndImport({
+                    silent: true,
+                    force: false
+                });
+
+                if (result.success) {
+                    addLog(logId, `✓ 导入成功！城市: ${result.city}`, 'success');
+                    if (result.data) {
+                        addLog(logId, `酒店: ${result.data.imported.hotels}`, 'success');
+                        addLog(logId, `景点: ${result.data.imported.attractions}`, 'success');
+                        addLog(logId, `餐厅: ${result.data.imported.restaurants}`, 'success');
+                    } else if (result.cached) {
+                        addLog(logId, '数据已存在（使用缓存）', 'info');
+                    }
+                } else {
+                    addLog(logId, `✗ 导入失败: ${result.error || result.message}`, 'error');
+                }
+            } catch (error) {
+                addLog(logId, `✗ 错误: ${error.message}`, 'error');
+                console.error('详细错误:', error);
+            }
+        };
+
+        // 手动导入北京
+        window.testManualImport = async function() {
+            const logId = 'importTestLog';
+            addLog(logId, '手动导入北京数据...', 'info');
+
+            try {
+                const response = await fetch(`${API_BASE}/city/auto-import`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ city: '北京' })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    addLog(logId, `✓ 导入成功！`, 'success');
+                    addLog(logId, `酒店: ${data.data.imported.hotels}`, 'success');
+                    addLog(logId, `景点: ${data.data.imported.attractions}`, 'success');
+                    addLog(logId, `餐厅: ${data.data.imported.restaurants}`, 'success');
+                } else {
+                    addLog(logId, `✗ 导入失败: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                addLog(logId, `✗ 错误: ${error.message}`, 'error');
+            }
+        };
+
+        // 清除缓存
+        window.clearCache = function() {
+            localStorage.removeItem('currentCity');
+            localStorage.removeItem('cityImportTime');
+            addLog('importTestLog', '✓ 缓存已清除', 'success');
+        };
+
+        // 查询酒店
+        window.testQueryHotels = async function() {
+            const logId = 'queryTestLog';
+            const city = localStorage.getItem('currentCity') || '北京';
+            addLog(logId, `查询 ${city} 的酒店数据...`, 'info');
+
+            try {
+                const response = await fetch(`${API_BASE}/hotels/search?city=${encodeURIComponent(city)}&limit=5`);
+                const data = await response.json();
+
+                if (data.success && data.data && data.data.length > 0) {
+                    addLog(logId, `✓ 找到 ${data.data.length} 家酒店`, 'success');
+                    data.data.slice(0, 3).forEach(hotel => {
+                        addLog(logId, `  - ${hotel.name}`, 'info');
+                    });
+                } else {
+                    addLog(logId, `✗ 未找到酒店数据`, 'error');
+                }
+            } catch (error) {
+                addLog(logId, `✗ 查询错误: ${error.message}`, 'error');
+            }
+        };
+
+        // 查询景点
+        window.testQueryAttractions = async function() {
+            const logId = 'queryTestLog';
+            const city = localStorage.getItem('currentCity') || '北京';
+            addLog(logId, `查询 ${city} 的景点数据...`, 'info');
+
+            try {
+                const response = await fetch(`${API_BASE}/attractions/search?location=${encodeURIComponent(city)}&limit=5`);
+                const data = await response.json();
+
+                if (data.success && data.data && data.data.length > 0) {
+                    addLog(logId, `✓ 找到 ${data.data.length} 个景点`, 'success');
+                    data.data.slice(0, 3).forEach(attraction => {
+                        addLog(logId, `  - ${attraction.name}`, 'info');
+                    });
+                } else {
+                    addLog(logId, `✗ 未找到景点数据`, 'error');
+                }
+            } catch (error) {
+                addLog(logId, `✗ 查询错误: ${error.message}`, 'error');
+            }
+        };
+
+        // 查询餐厅
+        window.testQueryRestaurants = async function() {
+            const logId = 'queryTestLog';
+            const city = localStorage.getItem('currentCity') || '北京';
+            addLog(logId, `查询 ${city} 的餐厅数据...`, 'info');
+
+            try {
+                const response = await fetch(`${API_BASE}/restaurants/search?city=${encodeURIComponent(city)}&limit=5`);
+                const data = await response.json();
+
+                if (data.success && data.data && data.data.length > 0) {
+                    addLog(logId, `✓ 找到 ${data.data.length} 家餐厅`, 'success');
+                    data.data.slice(0, 3).forEach(restaurant => {
+                        addLog(logId, `  - ${restaurant.name}`, 'info');
+                    });
+                } else {
+                    addLog(logId, `✗ 未找到餐厅数据`, 'error');
+                }
+            } catch (error) {
+                addLog(logId, `✗ 查询错误: ${error.message}`, 'error');
+            }
+        };
+
+        // 页面加载时自动测试连接
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                testBackendConnection();
+            }, 500);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地图API数据融合测试</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        .subtitle {
+            color: rgba(255,255,255,0.9);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        button {
+            display: block;
+            margin: 0 auto 30px;
+            padding: 15px 40px;
+            background: white;
+            color: #667eea;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        .status {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .hotel-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        .hotel-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .hotel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .hotel-name {
+            font-size: 24px;
+            color: #333;
+            font-weight: bold;
+            flex: 1;
+        }
+        .data-source {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .source-amap {
+            background: #4caf50;
+            color: white;
+        }
+        .source-baidu {
+            background: #2196F3;
+            color: white;
+        }
+        .source-merged {
+            background: #ff9800;
+            color: white;
+        }
+        .hotel-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 25px;
+        }
+        .hotel-images {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .hotel-images img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 2px solid #f0f0f0;
+        }
+        .hotel-images img.error {
+            border-color: #ff5252;
+        }
+        .hotel-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .info-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .info-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+        .info-row {
+            display: flex;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+        .info-label {
+            color: #666;
+            min-width: 100px;
+            font-weight: 500;
+        }
+        .info-value {
+            color: #333;
+            flex: 1;
+        }
+        .rating-box {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .rating-detail {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 5px 12px;
+            border-radius: 15px;
+            margin-right: 8px;
+            font-size: 13px;
+        }
+        .tag {
+            display: inline-block;
+            background: #e8eaf6;
+            color: #5e35b1;
+            padding: 5px 12px;
+            border-radius: 15px;
+            margin-right: 8px;
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+        .section-title {
+            color: white;
+            font-size: 28px;
+            margin: 40px 0 20px 0;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .no-data {
+            color: #999;
+            font-style: italic;
+        }
+        details {
+            margin-top: 15px;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        summary {
+            cursor: pointer;
+            color: #667eea;
+            font-weight: bold;
+            padding: 5px;
+        }
+        pre {
+            background: #263238;
+            color: #aed581;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗺️ 地图API数据融合测试</h1>
+        <div class="subtitle">
+            主数据源：高德地图（图片、评分、商圈） + 辅助数据源：百度地图（设施、细分评分）
+        </div>
+        <button onclick="startTest()">开始测试数据融合</button>
+        <div id="status"></div>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        const AMAP_KEY = '0c4c21c26cf0ed2fcebc2fabef2d6a0c';
+        const BAIDU_AK = 'FlIOoHHsXEzP6tN4a2PnhQ1clsGfhB5D';
+
+        // JSONP请求函数
+        function jsonp(url) {
+            return new Promise((resolve, reject) => {
+                const callbackName = 'jsonp_callback_' + Date.now() + '_' + Math.random().toString(36).substr(2);
+                window[callbackName] = function(data) {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    resolve(data);
+                };
+                const script = document.createElement('script');
+                script.src = url + '&callback=' + callbackName;
+                script.onerror = () => {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    reject(new Error('JSONP request failed'));
+                };
+                document.body.appendChild(script);
+            });
+        }
+
+        // 搜索高德地图酒店
+        async function searchAmapHotels(location) {
+            const url = `https://restapi.amap.com/v3/place/around?key=${AMAP_KEY}&location=${location}&types=100100&radius=2000&offset=3&extensions=all`;
+            const result = await jsonp(url);
+            return result.status === '1' ? result.pois : [];
+        }
+
+        // 搜索百度地图酒店
+        async function searchBaiduHotels(city) {
+            const url = `https://api.map.baidu.com/place/v2/search?query=酒店&region=${encodeURIComponent(city)}&output=json&ak=${BAIDU_AK}&page_size=10`;
+            const result = await jsonp(url);
+            return result.status === 0 ? result.results : [];
+        }
+
+        // 获取百度地图详情
+        async function getBaiduDetail(uid) {
+            const url = `https://api.map.baidu.com/place/v2/detail?uid=${uid}&output=json&ak=${BAIDU_AK}&scope=2`;
+            const result = await jsonp(url);
+            return result.status === 0 && result.result ? result.result : null;
+        }
+
+        // 名称相似度匹配（简单版）
+        function nameSimilarity(name1, name2) {
+            // 移除常见后缀
+            const clean1 = name1.replace(/酒店|宾馆|旅馆|Hotel|Inn/gi, '').trim();
+            const clean2 = name2.replace(/酒店|宾馆|旅馆|Hotel|Inn/gi, '').trim();
+
+            // 检查是否包含
+            if (clean1.includes(clean2) || clean2.includes(clean1)) {
+                return 0.8;
+            }
+
+            // 简单的字符匹配
+            let matches = 0;
+            const minLen = Math.min(clean1.length, clean2.length);
+            for (let i = 0; i < minLen; i++) {
+                if (clean1[i] === clean2[i]) matches++;
+            }
+            return matches / Math.max(clean1.length, clean2.length);
+        }
+
+        // 融合数据
+        function mergeHotelData(amapHotel, baiduDetail) {
+            const bizExt = amapHotel.biz_ext || {};
+            const detailInfo = baiduDetail?.detail_info || {};
+
+            return {
+                // 基础信息（来自高德）
+                id: amapHotel.id,
+                name: amapHotel.name,
+                address: amapHotel.address,
+                tel: amapHotel.tel,
+                location: amapHotel.location,
+
+                // 图片（来自高德）✅
+                photos: amapHotel.photos || [],
+
+                // 评分（高德主评分 + 百度细分评分）
+                rating: {
+                    overall: bizExt.rating || detailInfo.overall_rating || null,
+                    service: detailInfo.service_rating || null,
+                    facility: detailInfo.facility_rating || null,
+                    hygiene: detailInfo.hygiene_rating || null
+                },
+
+                // 商圈（来自高德）✅
+                businessArea: amapHotel.business_area,
+
+                // 标签（来自高德）
+                tag: amapHotel.tag,
+                type: amapHotel.type,
+
+                // 网站（来自高德）
+                website: amapHotel.website,
+
+                // 星级（来自百度）
+                level: detailInfo.level || null,
+
+                // 酒店服务（来自百度）✅
+                hotelService: detailInfo.hotel_service || null,
+
+                // 内部设施（来自百度）✅
+                innerFacility: detailInfo.inner_facility || null,
+
+                // 价格（两者都可能有）
+                price: bizExt.cost || bizExt.lowest_price || detailInfo.price || null,
+
+                // 数据来源标记
+                dataSources: {
+                    primary: 'amap',
+                    supplementary: baiduDetail ? 'baidu' : null
+                }
+            };
+        }
+
+        async function startTest() {
+            const statusDiv = document.getElementById('status');
+            const resultsDiv = document.getElementById('results');
+
+            statusDiv.innerHTML = '<div class="status">🔄 正在获取数据...</div>';
+            resultsDiv.innerHTML = '';
+
+            try {
+                const testLocations = [
+                    { name: '北京王府井', location: '116.417592,39.917723', city: '北京' }
+                ];
+
+                for (const location of testLocations) {
+                    statusDiv.innerHTML = `<div class="status">🔄 正在测试: ${location.name}<br>1️⃣ 获取高德地图数据...</div>`;
+
+                    // 1. 获取高德数据（主数据源）
+                    const amapHotels = await searchAmapHotels(location.location);
+
+                    statusDiv.innerHTML = `<div class="status">🔄 正在测试: ${location.name}<br>✅ 高德: ${amapHotels.length} 个结果<br>2️⃣ 获取百度地图数据...</div>`;
+
+                    // 2. 获取百度数据（辅助数据源）
+                    const baiduHotels = await searchBaiduHotels(location.city);
+
+                    statusDiv.innerHTML = `<div class="status">🔄 正在测试: ${location.name}<br>✅ 高德: ${amapHotels.length} 个<br>✅ 百度: ${baiduHotels.length} 个<br>3️⃣ 正在融合数据...</div>`;
+
+                    const sectionDiv = document.createElement('div');
+                    sectionDiv.innerHTML = `<h2 class="section-title">📍 ${location.name} - 数据融合结果</h2>`;
+                    resultsDiv.appendChild(sectionDiv);
+
+                    // 3. 数据融合
+                    for (let i = 0; i < Math.min(amapHotels.length, 3); i++) {
+                        const amapHotel = amapHotels[i];
+
+                        // 尝试在百度数据中找到匹配的酒店
+                        let matchedBaidu = null;
+                        let maxSimilarity = 0;
+
+                        for (const baiduHotel of baiduHotels) {
+                            const similarity = nameSimilarity(amapHotel.name, baiduHotel.name);
+                            if (similarity > maxSimilarity && similarity > 0.6) {
+                                maxSimilarity = similarity;
+                                matchedBaidu = baiduHotel;
+                            }
+                        }
+
+                        // 如果找到匹配，获取百度详情
+                        let baiduDetail = null;
+                        if (matchedBaidu) {
+                            statusDiv.innerHTML = `<div class="status">🔄 匹配到百度数据: ${matchedBaidu.name} (相似度: ${(maxSimilarity * 100).toFixed(0)}%)<br>正在获取详情...</div>`;
+                            baiduDetail = await getBaiduDetail(matchedBaidu.uid);
+                        }
+
+                        // 融合数据
+                        const mergedData = mergeHotelData(amapHotel, baiduDetail);
+
+                        // 渲染卡片
+                        renderHotelCard(mergedData, matchedBaidu, maxSimilarity, resultsDiv);
+                    }
+                }
+
+                statusDiv.innerHTML = `
+                    <div class="status">
+                        ✅ <strong>数据融合完成！</strong><br><br>
+                        <strong>融合策略：</strong><br>
+                        🎯 <span class="highlight">主数据源：高德地图</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;• 酒店列表、名称、地址、电话<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;• ✅ 图片URL（可直接展示）<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;• ✅ 商圈信息（用于筛选）<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;• ✅ 总体评分<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;• 标签、类型<br><br>
+                        🔧 <span class="highlight">辅助数据源：百度地图</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;• ✅ 四维细分评分（服务、设施、卫生）<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;• ✅ 酒店配套服务<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;• ✅ 内部设施<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;• 星级信息<br><br>
+                        <strong>匹配方式：</strong>通过酒店名称相似度匹配（阈值60%）
+                    </div>
+                `;
+
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="status">❌ 测试失败: ${error.message}</div>`;
+                console.error(error);
+            }
+        }
+
+        function renderHotelCard(hotel, matchedBaidu, similarity, container) {
+            const card = document.createElement('div');
+            card.className = 'hotel-card';
+
+            const photos = hotel.photos.slice(0, 2);
+            const hasPhotos = photos.length > 0;
+
+            card.innerHTML = `
+                <div class="hotel-header">
+                    <div class="hotel-name">
+                        ${hotel.name}
+                        <span class="data-source source-amap">高德主数据</span>
+                        ${matchedBaidu ? `<span class="data-source source-merged">已融合百度数据 ${(similarity * 100).toFixed(0)}%</span>` : ''}
+                    </div>
+                </div>
+
+                <div class="hotel-content">
+                    <div class="hotel-images">
+                        ${hasPhotos ? photos.map(photo => `
+                            <img src="${photo.url}" alt="${hotel.name}"
+                                 onerror="this.classList.add('error'); this.alt='图片加载失败'">
+                        `).join('') : '<div class="no-data">暂无图片</div>'}
+                    </div>
+
+                    <div class="hotel-info">
+                        <div class="info-section">
+                            <div class="info-title">📊 评分信息</div>
+                            <div class="info-row">
+                                <div class="info-label">总体评分：</div>
+                                <div class="info-value">
+                                    ${hotel.rating.overall ? `<span class="rating-box">⭐ ${hotel.rating.overall}</span> <span class="data-source source-amap">高德</span>` : '<span class="no-data">暂无</span>'}
+                                </div>
+                            </div>
+                            ${hotel.rating.service || hotel.rating.facility || hotel.rating.hygiene ? `
+                            <div class="info-row">
+                                <div class="info-label">细分评分：</div>
+                                <div class="info-value">
+                                    ${hotel.rating.service ? `<span class="rating-detail">服务 ${hotel.rating.service}</span>` : ''}
+                                    ${hotel.rating.facility ? `<span class="rating-detail">设施 ${hotel.rating.facility}</span>` : ''}
+                                    ${hotel.rating.hygiene ? `<span class="rating-detail">卫生 ${hotel.rating.hygiene}</span>` : ''}
+                                    <span class="data-source source-baidu">百度补充</span>
+                                </div>
+                            </div>
+                            ` : ''}
+                        </div>
+
+                        <div class="info-section">
+                            <div class="info-title">📍 基础信息</div>
+                            <div class="info-row">
+                                <div class="info-label">地址：</div>
+                                <div class="info-value">${hotel.address || '<span class="no-data">暂无</span>'}</div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">电话：</div>
+                                <div class="info-value">${hotel.tel || '<span class="no-data">暂无</span>'}</div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">商圈：</div>
+                                <div class="info-value">
+                                    ${hotel.businessArea ? `<span class="tag">${hotel.businessArea}</span> <span class="data-source source-amap">高德</span>` : '<span class="no-data">暂无</span>'}
+                                </div>
+                            </div>
+                            ${hotel.level ? `
+                            <div class="info-row">
+                                <div class="info-label">星级：</div>
+                                <div class="info-value">${hotel.level} <span class="data-source source-baidu">百度</span></div>
+                            </div>
+                            ` : ''}
+                        </div>
+
+                        ${hotel.hotelService || hotel.innerFacility ? `
+                        <div class="info-section">
+                            <div class="info-title">🏨 设施与服务 <span class="data-source source-baidu">百度补充</span></div>
+                            ${hotel.hotelService ? `
+                            <div class="info-row">
+                                <div class="info-label">酒店服务：</div>
+                                <div class="info-value">${hotel.hotelService}</div>
+                            </div>
+                            ` : ''}
+                            ${hotel.innerFacility ? `
+                            <div class="info-row">
+                                <div class="info-label">内部设施：</div>
+                                <div class="info-value">${hotel.innerFacility}</div>
+                            </div>
+                            ` : ''}
+                        </div>
+                        ` : ''}
+
+                        <details>
+                            <summary>查看完整融合数据</summary>
+                            <pre>${JSON.stringify(hotel, null, 2)}</pre>
+                        </details>
+                    </div>
+                </div>
+            `;
+
+            container.appendChild(card);
+        }
+    </script>
+</body>
+</html>

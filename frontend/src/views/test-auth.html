@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 4px;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <h1>登录功能测试</h1>
+
+    <div class="test-section">
+        <h2>1. 测试注册</h2>
+        <button id="testRegister">测试注册</button>
+        <div class="result" id="registerResult"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. 测试登录</h2>
+        <button id="testLogin">测试登录</button>
+        <div class="result" id="loginResult"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. 检查登录状态</h2>
+        <button id="checkAuth">检查状态</button>
+        <div class="result" id="authResult"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. 测试Token验证</h2>
+        <button id="testVerify">验证Token</button>
+        <div class="result" id="verifyResult"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>5. 测试退出</h2>
+        <button id="testLogout">退出登录</button>
+        <div class="result" id="logoutResult"></div>
+    </div>
+
+    <script type="module">
+        import { authService } from '../services/auth.js';
+
+        // 测试注册
+        document.getElementById('testRegister').addEventListener('click', async () => {
+            const result = document.getElementById('registerResult');
+            result.textContent = '注册中...';
+
+            try {
+                const testUser = {
+                    username: 'testuser' + Date.now(),
+                    email: 'test' + Date.now() + '@example.com',
+                    password: 'password123'
+                };
+
+                const response = await authService.register(
+                    testUser.username,
+                    testUser.email,
+                    testUser.password
+                );
+
+                result.className = 'result success';
+                result.textContent = '注册成功！\n' + JSON.stringify(response, null, 2);
+            } catch (error) {
+                result.className = 'result error';
+                result.textContent = '注册失败：' + error.message;
+            }
+        });
+
+        // 测试登录
+        document.getElementById('testLogin').addEventListener('click', async () => {
+            const result = document.getElementById('loginResult');
+            result.textContent = '登录中...';
+
+            try {
+                // 使用测试账号
+                const response = await authService.login(
+                    'test@example.com',
+                    'password123',
+                    false
+                );
+
+                result.className = 'result success';
+                result.textContent = '登录成功！\n' + JSON.stringify(response, null, 2);
+            } catch (error) {
+                result.className = 'result error';
+                result.textContent = '登录失败：' + error.message;
+            }
+        });
+
+        // 检查登录状态
+        document.getElementById('checkAuth').addEventListener('click', () => {
+            const result = document.getElementById('authResult');
+            const isAuth = authService.isAuthenticated();
+            const token = authService.getToken();
+            const user = authService.getUser();
+
+            result.className = 'result ' + (isAuth ? 'success' : 'error');
+            result.textContent = `
+登录状态: ${isAuth ? '已登录' : '未登录'}
+Token: ${token ? token.substring(0, 20) + '...' : '无'}
+用户信息: ${user ? JSON.stringify(user, null, 2) : '无'}
+            `;
+        });
+
+        // 测试Token验证
+        document.getElementById('testVerify').addEventListener('click', async () => {
+            const result = document.getElementById('verifyResult');
+            result.textContent = '验证中...';
+
+            try {
+                const response = await authService.verifyToken();
+
+                result.className = 'result ' + (response.success ? 'success' : 'error');
+                result.textContent = 'Token验证结果：\n' + JSON.stringify(response, null, 2);
+            } catch (error) {
+                result.className = 'result error';
+                result.textContent = '验证失败：' + error.message;
+            }
+        });
+
+        // 测试退出
+        document.getElementById('testLogout').addEventListener('click', async () => {
+            const result = document.getElementById('logoutResult');
+            result.textContent = '退出中...';
+
+            try {
+                await authService.logout();
+                result.className = 'result success';
+                result.textContent = '退出成功！';
+            } catch (error) {
+                result.className = 'result error';
+                result.textContent = '退出失败：' + error.message;
+            }
+        });
+
+        // 页面加载时显示当前状态
+        window.addEventListener('load', () => {
+            document.getElementById('checkAuth').click();
+        });
+    </script>
+</body>
+</html>

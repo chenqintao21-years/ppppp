@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自动导入功能测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .test-section h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .result {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .success {
+            color: #00aa6c;
+            font-weight: bold;
+        }
+        .error {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        button {
+            background: #00aa6c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #008c5a;
+        }
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .status.loading {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+        }
+        .status.success {
+            background: #d4edda;
+            border: 1px solid #00aa6c;
+        }
+        .status.error {
+            background: #f8d7da;
+            border: 1px solid #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 自动导入功能完整测试</h1>
+
+    <div class="test-section">
+        <h2>1. 测试后端API - getCityStats</h2>
+        <button onclick="testGetCityStats()">测试获取城市统计</button>
+        <div id="stats-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. 测试前端服务 - cityAutoImportService</h2>
+        <button onclick="testFrontendService()">测试前端服务</button>
+        <div id="frontend-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. 测试完整流程 - 自动定位和导入</h2>
+        <button onclick="testAutoLocationImport()">开始自动导入</button>
+        <button onclick="testAutoLocationImportForce()">强制重新导入</button>
+        <div id="auto-status" class="status" style="display:none;"></div>
+        <div id="auto-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. 当前状态</h2>
+        <button onclick="checkCurrentStatus()">检查当前状态</button>
+        <div id="status-result" class="result"></div>
+    </div>
+
+    <script type="module">
+        import { cityAutoImportService } from './src/services/cityAutoImport.js';
+        import { autoLocationImportService } from './src/services/autoLocationImport.js';
+
+        // 测试1: 直接调用后端API
+        window.testGetCityStats = async function() {
+            const resultDiv = document.getElementById('stats-result');
+            resultDiv.textContent = '正在测试...';
+
+            try {
+                const response = await fetch('http://localhost:3000/api/cities/stats/' + encodeURIComponent('北京'));
+                const data = await response.json();
+
+                resultDiv.innerHTML = `<span class="success">✓ 成功</span>\n${JSON.stringify(data, null, 2)}`;
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="error">✗ 失败</span>\n${error.message}`;
+            }
+        };
+
+        // 测试2: 测试前端服务
+        window.testFrontendService = async function() {
+            const resultDiv = document.getElementById('frontend-result');
+            resultDiv.textContent = '正在测试...';
+
+            try {
+                const result = await cityAutoImportService.getCityStats('北京');
+                resultDiv.innerHTML = `<span class="success">✓ 成功</span>\n${JSON.stringify(result, null, 2)}`;
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="error">✗ 失败</span>\n${error.message}\n${error.stack}`;
+            }
+        };
+
+        // 测试3: 测试完整自动导入流程
+        window.testAutoLocationImport = async function() {
+            const statusDiv = document.getElementById('auto-status');
+            const resultDiv = document.getElementById('auto-result');
+
+            statusDiv.style.display = 'block';
+            statusDiv.className = 'status loading';
+            statusDiv.textContent = '⏳ 正在自动定位和导入...';
+            resultDiv.textContent = '';
+
+            try {
+                const result = await autoLocationImportService.autoLocationAndImport({
+                    silent: false,
+                    force: false
+                });
+
+                statusDiv.className = 'status success';
+                statusDiv.textContent = '✓ 完成';
+                resultDiv.innerHTML = `<span class="success">✓ 成功</span>\n${JSON.stringify(result, null, 2)}`;
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.textContent = '✗ 失败';
+                resultDiv.innerHTML = `<span class="error">✗ 失败</span>\n${error.message}\n${error.stack}`;
+            }
+        };
+
+        // 测试3b: 强制重新导入
+        window.testAutoLocationImportForce = async function() {
+            const statusDiv = document.getElementById('auto-status');
+            const resultDiv = document.getElementById('auto-result');
+
+            statusDiv.style.display = 'block';
+            statusDiv.className = 'status loading';
+            statusDiv.textContent = '⏳ 正在强制重新导入...';
+            resultDiv.textContent = '';
+
+            try {
+                const result = await autoLocationImportService.autoLocationAndImport({
+                    silent: false,
+                    force: true
+                });
+
+                statusDiv.className = 'status success';
+                statusDiv.textContent = '✓ 完成';
+                resultDiv.innerHTML = `<span class="success">✓ 成功</span>\n${JSON.stringify(result, null, 2)}`;
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.textContent = '✗ 失败';
+                resultDiv.innerHTML = `<span class="error">✗ 失败</span>\n${error.message}\n${error.stack}`;
+            }
+        };
+
+        // 测试4: 检查当前状态
+        window.checkCurrentStatus = function() {
+            const resultDiv = document.getElementById('status-result');
+
+            const currentCity = autoLocationImportService.getCurrentCity();
+            const cachedCity = localStorage.getItem('currentCity');
+            const importTime = localStorage.getItem('cityImportTime');
+
+            const status = {
+                currentCity: currentCity,
+                cachedCity: cachedCity,
+                importTime: importTime ? new Date(parseInt(importTime)).toLocaleString() : null,
+                hasAutoImported: autoLocationImportService.hasAutoImported,
+                isAutoImporting: autoLocationImportService.isAutoImporting
+            };
+
+            resultDiv.textContent = JSON.stringify(status, null, 2);
+        };
+
+        // 监听城市数据导入完成事件
+        window.addEventListener('cityDataImported', (event) => {
+            console.log('🎉 收到cityDataImported事件:', event.detail);
+
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #00aa6c;
+                color: white;
+                padding: 15px 30px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                z-index: 10000;
+                font-weight: bold;
+            `;
+            notification.textContent = `✓ 城市数据已导入: ${event.detail.city}`;
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.remove(), 3000);
+        });
+
+        console.log('测试页面已加载，可以开始测试');
+    </script>
+</body>
+</html>

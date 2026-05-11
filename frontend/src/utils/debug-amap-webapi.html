@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高德地图Web服务API测试</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+        }
+        h1 {
+            color: #4caf50;
+        }
+        button {
+            padding: 12px 24px;
+            background: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            background: #2d2d2d;
+        }
+        .hotel-debug {
+            background: #2d2d2d;
+            border: 1px solid #404040;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .hotel-name {
+            font-size: 18px;
+            color: #4caf50;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .field {
+            margin: 8px 0;
+            padding: 8px;
+            background: #1e1e1e;
+            border-radius: 4px;
+        }
+        .field-name {
+            color: #569cd6;
+            display: inline-block;
+            min-width: 180px;
+        }
+        .field-value {
+            color: #ce9178;
+        }
+        .field-value.null {
+            color: #666;
+            font-style: italic;
+        }
+        .field-value.object {
+            color: #dcdcaa;
+        }
+        pre {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            line-height: 1.5;
+        }
+        .highlight {
+            background: #3a3a1e;
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+        .section-title {
+            color: #4caf50;
+            margin: 30px 0 20px 0;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 高德地图Web服务API测试（新Key）</h1>
+    <button onclick="debugAPI()">开始调试</button>
+    <div id="status"></div>
+    <div id="results"></div>
+
+    <script>
+        const KEY = '0c4c21c26cf0ed2fcebc2fabef2d6a0c';
+
+        // JSONP请求函数
+        function jsonp(url) {
+            return new Promise((resolve, reject) => {
+                const callbackName = 'jsonp_callback_' + Date.now() + '_' + Math.random().toString(36).substr(2);
+
+                window[callbackName] = function(data) {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    resolve(data);
+                };
+
+                const script = document.createElement('script');
+                script.src = url + '&callback=' + callbackName;
+                script.onerror = () => {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    reject(new Error('JSONP request failed'));
+                };
+                document.body.appendChild(script);
+            });
+        }
+
+        async function debugAPI() {
+            const statusDiv = document.getElementById('status');
+            const resultsDiv = document.getElementById('results');
+
+            statusDiv.innerHTML = '<div class="status">🔄 正在获取数据...</div>';
+            resultsDiv.innerHTML = '';
+
+            try {
+                // 测试多个城市
+                const testLocations = [
+                    { name: '北京王府井', location: '116.417592,39.917723' },
+                    { name: '上海外滩', location: '121.4905,31.2397' },
+                    { name: '广州天河', location: '113.3245,23.1545' }
+                ];
+
+                for (const location of testLocations) {
+                    statusDiv.innerHTML = `<div class="status">🔄 正在测试: ${location.name}</div>`;
+
+                    // 周边搜索 - 使用JSONP
+                    const searchUrl = `https://restapi.amap.com/v3/place/around?key=${KEY}&location=${location.location}&types=100100&radius=2000&offset=3&extensions=all`;
+
+                    const result = await jsonp(searchUrl);
+
+                    if (result.status === '1' && result.pois) {
+                        const locationDiv = document.createElement('div');
+                        locationDiv.innerHTML = `<h2 class="section-title">📍 ${location.name} - 找到 ${result.count} 个结果（显示前3个）</h2>`;
+                        resultsDiv.appendChild(locationDiv);
+
+                        for (let i = 0; i < result.pois.length; i++) {
+                            const poi = result.pois[i];
+
+                            const debugDiv = document.createElement('div');
+                            debugDiv.className = 'hotel-debug';
+
+                            // 检查关键字段
+                            const bizExt = poi.biz_ext || {};
+                            const hasRating = bizExt.rating;
+                            const hasCost = bizExt.cost && bizExt.cost.length > 0;
+                            const photos = poi.photos || [];
+                            const hasPhotos = photos.length > 0;
+
+                            let fieldsHtml = `
+                                <div class="hotel-name">${i + 1}. ${poi.name}</div>
+
+                                <div class="field">
+                                    <span class="field-name">id:</span>
+                                    <span class="field-value">${poi.id || 'null'}</span>
+                                </div>
+
+                                <div class="field">
+                                    <span class="field-name">address:</span>
+                                    <span class="field-value">${poi.address || 'null'}</span>
+                                </div>
+
+                                <div class="field">
+                                    <span class="field-name">tel:</span>
+                                    <span class="field-value">${poi.tel || 'null'}</span>
+                                </div>
+
+                                <div class="field ${hasRating ? 'highlight' : ''}">
+                                    <span class="field-name">⭐ biz_ext.rating:</span>
+                                    <span class="field-value ${hasRating ? '' : 'null'}">${hasRating || '❌ 无评分数据'}</span>
+                                </div>
+
+                                <div class="field ${hasCost ? 'highlight' : ''}">
+                                    <span class="field-name">💰 biz_ext.cost:</span>
+                                    <span class="field-value ${hasCost ? '' : 'null'}">${hasCost ? bizExt.cost : '❌ 无价格数据'}</span>
+                                </div>
+
+                                <div class="field ${bizExt.lowest_price ? 'highlight' : ''}">
+                                    <span class="field-name">💰 biz_ext.lowest_price:</span>
+                                    <span class="field-value ${bizExt.lowest_price ? '' : 'null'}">${bizExt.lowest_price || '❌ 无'}</span>
+                                </div>
+
+                                <div class="field ${hasPhotos ? 'highlight' : ''}">
+                                    <span class="field-name">📷 photos:</span>
+                                    <span class="field-value ${hasPhotos ? '' : 'null'}">${hasPhotos ? `${photos.length} 张图片` : '❌ 无图片'}</span>
+                                </div>
+
+                                ${hasPhotos ? `
+                                <div class="field highlight">
+                                    <span class="field-name">📷 photos[0].url:</span>
+                                    <span class="field-value">${photos[0].url || 'null'}</span>
+                                </div>
+                                <div class="field highlight">
+                                    <span class="field-name">📷 图片预览:</span>
+                                    <div style="margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap;">
+                                        ${photos.slice(0, 5).map(photo => `
+                                            <img src="${photo.url}"
+                                                 style="width: 150px; height: 100px; object-fit: cover; border-radius: 4px; border: 1px solid #404040;"
+                                                 alt="${poi.name}"
+                                                 onerror="this.style.border='2px solid red'; this.alt='图片加载失败'">
+                                        `).join('')}
+                                    </div>
+                                </div>
+                                ` : ''}
+
+                                <div class="field">
+                                    <span class="field-name">website:</span>
+                                    <span class="field-value ${poi.website ? '' : 'null'}">${poi.website || 'null'}</span>
+                                </div>
+
+                                <div class="field">
+                                    <span class="field-name">type:</span>
+                                    <span class="field-value">${poi.type || 'null'}</span>
+                                </div>
+
+                                <div class="field">
+                                    <span class="field-name">typecode:</span>
+                                    <span class="field-value">${poi.typecode || 'null'}</span>
+                                </div>
+
+                                <div class="field">
+                                    <span class="field-name">business_area:</span>
+                                    <span class="field-value ${poi.business_area ? '' : 'null'}">${poi.business_area || 'null'}</span>
+                                </div>
+
+                                <div class="field">
+                                    <span class="field-name">tag:</span>
+                                    <span class="field-value ${poi.tag ? '' : 'null'}">${poi.tag || 'null'}</span>
+                                </div>
+
+                                <div class="field">
+                                    <span class="field-name">biz_ext (完整对象):</span>
+                                    <span class="field-value object">${JSON.stringify(bizExt)}</span>
+                                </div>
+                            `;
+
+                            debugDiv.innerHTML = fieldsHtml + `
+                                <details style="margin-top: 15px;">
+                                    <summary style="cursor: pointer; color: #888;">查看完整JSON</summary>
+                                    <pre>${JSON.stringify(poi, null, 2)}</pre>
+                                </details>
+                            `;
+
+                            resultsDiv.appendChild(debugDiv);
+                        }
+                    } else {
+                        const errorDiv = document.createElement('div');
+                        errorDiv.className = 'hotel-debug';
+                        errorDiv.innerHTML = `
+                            <div class="hotel-name">❌ ${location.name} - 搜索失败</div>
+                            <div class="field">
+                                <span class="field-name">错误信息:</span>
+                                <span class="field-value">${result.info || '未知错误'}</span>
+                            </div>
+                            <pre>${JSON.stringify(result, null, 2)}</pre>
+                        `;
+                        resultsDiv.appendChild(errorDiv);
+                    }
+                }
+
+                statusDiv.innerHTML = `
+                    <div class="status">
+                        ✅ 调试完成<br><br>
+                        <strong>高德地图Web服务API数据总结：</strong><br>
+                        • <span class="highlight">评分数据</span>: biz_ext.rating ✅ 有数据<br>
+                        • <span class="highlight">价格数据</span>: biz_ext.cost, biz_ext.lowest_price（通常为空）<br>
+                        • <span class="highlight">图片数据</span>: photos 数组，✅ 包含完整图片URL<br>
+                        • <span class="highlight">商圈信息</span>: business_area<br>
+                        • <span class="highlight">标签信息</span>: tag<br><br>
+                        <strong>优势：</strong><br>
+                        高德地图提供实际的图片URL，可以直接显示图片！<br><br>
+                        <strong>限制：</strong><br>
+                        不提供评论内容、房型信息和实时价格。
+                    </div>
+                `;
+
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="status">❌ 调试失败: ${error.message}</div>`;
+                console.error(error);
+            }
+        }
+    </script>
+</body>
+</html>

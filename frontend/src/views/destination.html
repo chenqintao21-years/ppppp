@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>罗马景点玩乐 - Tripadvisor</title>
+    <link rel="stylesheet" href="../styles/base/styles.css">
+    <link rel="stylesheet" href="../styles/pages/destination.css">
+</head>
+<body>
+    <!-- 滚动导航栏 -->
+    <header class="header-scrolled" id="headerScrolled">
+        <div class="container">
+            <nav class="navbar-scrolled">
+                <div class="logo">
+                    <a href="index.html">
+                        <svg width="166" height="28" viewBox="0 0 166 28">
+                            <path d="M14 0C6.3 0 0 6.3 0 14s6.3 14 14 14 14-6.3 14-14S21.7 0 14 0zm0 25c-6.1 0-11-4.9-11-11S7.9 3 14 3s11 4.9 11 11-4.9 11-11 11z" fill="#00AA6C"/>
+                            <circle cx="9" cy="14" r="3.5" fill="#00AA6C"/>
+                            <circle cx="19" cy="14" r="3.5" fill="#00AA6C"/>
+                            <text x="32" y="20" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#000">Tripadvisor</text>
+                        </svg>
+                    </a>
+                </div>
+                <div class="search-bar-compact">
+                    <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input type="text" placeholder="搜索" class="search-input-compact">
+                </div>
+                <div class="nav-tabs">
+                    <a href="hotel-page.html" class="nav-tab">酒店</a>
+                    <a href="attractions.html" class="nav-tab active">景点玩乐</a>
+                    <a href="restaurant.html" class="nav-tab">美食</a>
+                    <a href="#" class="nav-tab">游船</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="destination-main">
+        <div class="container">
+            <!-- 面包屑导航 -->
+            <nav class="breadcrumb">
+                <button class="back-button" onclick="window.history.length > 1 ? window.history.back() : window.location.href='index.html'">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                    <span>返回</span>
+                </button>
+                <a href="index.html">首页</a>
+                <span>›</span>
+                <a href="attractions.html">景点玩乐</a>
+                <span>›</span>
+                <span>罗马</span>
+            </nav>
+
+            <!-- 目的地头部 -->
+            <div class="destination-header">
+                <div class="header-content">
+                    <h1 class="destination-title" id="destinationTitle">罗马景点玩乐</h1>
+                    <div class="destination-meta" id="destinationMeta">
+                        <span class="attraction-count">1,234个景点</span>
+                        <span class="separator">•</span>
+                        <span class="review-count">567,890条点评</span>
+                    </div>
+
+                    <!-- 主导航标签 -->
+                    <div class="destination-nav-tabs">
+                        <button class="dest-nav-tab" data-type="hotels">酒店</button>
+                        <button class="dest-nav-tab active" data-type="attractions">景点玩乐</button>
+                        <button class="dest-nav-tab" data-type="restaurants">美食</button>
+                        <button class="dest-nav-tab" data-type="cruises">游船</button>
+                    </div>
+                </div>
+                <div class="header-image">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='150'%3E%3Crect fill='%23e76f51' width='200' height='150'/%3E%3Ctext x='50%25' y='50%25' font-size='16' fill='white' text-anchor='middle' dy='.3em'%3E罗马斗兽场%3C/text%3E%3C/svg%3E" alt="罗马">
+                </div>
+            </div>
+
+            <!-- 筛选和排序 -->
+            <div class="filter-bar" id="filterBar">
+                <div class="filter-left" id="filterLeft">
+                    <!-- 动态筛选按钮将在这里显示 -->
+                </div>
+                <div class="filter-right">
+                    <select class="sort-select" id="sortSelect">
+                        <option value="recommended">推荐</option>
+                        <option value="rating">评分最高</option>
+                        <option value="reviews">评论最多</option>
+                        <option value="price-low">价格从低到高</option>
+                        <option value="price-high">价格从高到低</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 动态内容区域 -->
+            <div id="contentArea">
+                <!-- 内容将通过JavaScript动态加载 -->
+            </div>
+
+            <!-- 加载更多 -->
+            <div class="load-more-section">
+                <button class="load-more-btn">加载更多</button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Tripadvisor. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../pages/destination.js"></script>
+</body>
+</html>

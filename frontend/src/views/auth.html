@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 / 注册 - Tripadvisor</title>
+    <link rel="stylesheet" href="../styles/base/styles.css">
+    <link rel="stylesheet" href="../styles/components/auth.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-box">
+            <div class="auth-header">
+                <div class="logo">
+                    <svg width="166" height="28" viewBox="0 0 166 28">
+                        <path d="M14 0C6.3 0 0 6.3 0 14s6.3 14 14 14 14-6.3 14-14S21.7 0 14 0zm0 25c-6.1 0-11-4.9-11-11S7.9 3 14 3s11 4.9 11 11-4.9 11-11 11z" fill="#00AA6C"/>
+                        <circle cx="9" cy="14" r="3.5" fill="#00AA6C"/>
+                        <circle cx="19" cy="14" r="3.5" fill="#00AA6C"/>
+                        <text x="32" y="20" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#000">Tripadvisor</text>
+                    </svg>
+                </div>
+                <a href="index.html" class="close-btn">&times;</a>
+            </div>
+
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login">登录</button>
+                <button class="auth-tab" data-tab="register">注册</button>
+            </div>
+
+            <!-- 登录表单 -->
+            <div class="auth-form-container" id="loginForm">
+                <form class="auth-form" id="loginFormElement">
+                    <div class="form-group">
+                        <label for="loginEmail">邮箱</label>
+                        <input type="email" id="loginEmail" name="email" placeholder="请输入邮箱" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginPassword">密码</label>
+                        <input type="password" id="loginPassword" name="password" placeholder="请输入密码" required>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="rememberMe" name="rememberMe">
+                            <span>记住我</span>
+                        </label>
+                        <a href="#" class="forgot-password">忘记密码？</a>
+                    </div>
+
+                    <div class="error-message" id="loginError"></div>
+
+                    <button type="submit" class="btn-primary btn-block" id="loginBtn">
+                        <span class="btn-text">登录</span>
+                        <span class="btn-loading" style="display: none;">登录中...</span>
+                    </button>
+                </form>
+
+                <div class="auth-divider">
+                    <span>或</span>
+                </div>
+
+                <div class="social-login">
+                    <button class="btn-social btn-google">
+                        <svg width="18" height="18" viewBox="0 0 18 18">
+                            <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+                            <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/>
+                            <path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957C.347 6.175 0 7.55 0 9s.348 2.825.957 4.039l3.007-2.332z"/>
+                            <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+                        </svg>
+                        使用 Google 登录
+                    </button>
+                </div>
+            </div>
+
+            <!-- 注册表单 -->
+            <div class="auth-form-container" id="registerForm" style="display: none;">
+                <form class="auth-form" id="registerFormElement">
+                    <div class="form-group">
+                        <label for="registerUsername">用户名</label>
+                        <input type="text" id="registerUsername" name="username" placeholder="请输入用户名（3-20个字符）" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerEmail">邮箱</label>
+                        <input type="email" id="registerEmail" name="email" placeholder="请输入邮箱" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerPassword">密码</label>
+                        <input type="password" id="registerPassword" name="password" placeholder="请输入密码（至少8位）" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerPasswordConfirm">确认密码</label>
+                        <input type="password" id="registerPasswordConfirm" name="passwordConfirm" placeholder="请再次输入密码" required>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
+                            <span>我同意 <a href="#">服务条款</a> 和 <a href="#">隐私政策</a></span>
+                        </label>
+                    </div>
+
+                    <div class="error-message" id="registerError"></div>
+
+                    <button type="submit" class="btn-primary btn-block" id="registerBtn">
+                        <span class="btn-text">注册</span>
+                        <span class="btn-loading" style="display: none;">注册中...</span>
+                    </button>
+                </form>
+
+                <div class="auth-divider">
+                    <span>或</span>
+                </div>
+
+                <div class="social-login">
+                    <button class="btn-social btn-google">
+                        <svg width="18" height="18" viewBox="0 0 18 18">
+                            <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+                            <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/>
+                            <path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957C.347 6.175 0 7.55 0 9s.348 2.825.957 4.039l3.007-2.332z"/>
+                            <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+                        </svg>
+                        使用 Google 注册
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { authService, validateEmail, validatePassword, validateUsername } from '../services/auth.js';
+
+        // 切换登录/注册标签
+        const tabs = document.querySelectorAll('.auth-tab');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabName = tab.dataset.tab;
+
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                if (tabName === 'login') {
+                    loginForm.style.display = 'block';
+                    registerForm.style.display = 'none';
+                } else {
+                    loginForm.style.display = 'none';
+                    registerForm.style.display = 'block';
+                }
+            });
+        });
+
+        // 检查URL参数，决定显示哪个表单
+        const urlParams = new URLSearchParams(window.location.search);
+        const mode = urlParams.get('mode');
+        if (mode === 'register') {
+            document.querySelector('[data-tab="register"]').click();
+        }
+
+        // 登录表单提交
+        const loginFormElement = document.getElementById('loginFormElement');
+        const loginError = document.getElementById('loginError');
+        const loginBtn = document.getElementById('loginBtn');
+
+        loginFormElement.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+
+            // 验证
+            if (!validateEmail(email)) {
+                loginError.textContent = '请输入有效的邮箱地址';
+                loginError.style.display = 'block';
+                return;
+            }
+
+            if (!password) {
+                loginError.textContent = '请输入密码';
+                loginError.style.display = 'block';
+                return;
+            }
+
+            // 显示加载状态
+            loginBtn.disabled = true;
+            loginBtn.querySelector('.btn-text').style.display = 'none';
+            loginBtn.querySelector('.btn-loading').style.display = 'inline';
+            loginError.style.display = 'none';
+
+            try {
+                const result = await authService.login(email, password, rememberMe);
+
+                if (result.success) {
+                    // 登录成功，跳转到首页或返回页面
+                    const returnUrl = urlParams.get('return') || 'index.html';
+                    window.location.href = returnUrl;
+                } else {
+                    loginError.textContent = result.message || '登录失败，请重试';
+                    loginError.style.display = 'block';
+                }
+            } catch (error) {
+                loginError.textContent = error.message || '登录失败，请检查网络连接';
+                loginError.style.display = 'block';
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.querySelector('.btn-text').style.display = 'inline';
+                loginBtn.querySelector('.btn-loading').style.display = 'none';
+            }
+        });
+
+        // 注册表单提交
+        const registerFormElement = document.getElementById('registerFormElement');
+        const registerError = document.getElementById('registerError');
+        const registerBtn = document.getElementById('registerBtn');
+
+        registerFormElement.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('registerUsername').value.trim();
+            const email = document.getElementById('registerEmail').value.trim();
+            const password = document.getElementById('registerPassword').value;
+            const passwordConfirm = document.getElementById('registerPasswordConfirm').value;
+            const agreeTerms = document.getElementById('agreeTerms').checked;
+
+            // 验证
+            if (!validateUsername(username)) {
+                registerError.textContent = '用户名长度应为3-20个字符';
+                registerError.style.display = 'block';
+                return;
+            }
+
+            if (!validateEmail(email)) {
+                registerError.textContent = '请输入有效的邮箱地址';
+                registerError.style.display = 'block';
+                return;
+            }
+
+            if (!validatePassword(password)) {
+                registerError.textContent = '密码至少需要8位';
+                registerError.style.display = 'block';
+                return;
+            }
+
+            if (password !== passwordConfirm) {
+                registerError.textContent = '两次输入的密码不一致';
+                registerError.style.display = 'block';
+                return;
+            }
+
+            if (!agreeTerms) {
+                registerError.textContent = '请同意服务条款和隐私政策';
+                registerError.style.display = 'block';
+                return;
+            }
+
+            // 显示加载状态
+            registerBtn.disabled = true;
+            registerBtn.querySelector('.btn-text').style.display = 'none';
+            registerBtn.querySelector('.btn-loading').style.display = 'inline';
+            registerError.style.display = 'none';
+
+            try {
+                const result = await authService.register(username, email, password);
+
+                if (result.success) {
+                    // 注册成功，跳转到首页
+                    window.location.href = 'index.html';
+                } else {
+                    registerError.textContent = result.message || '注册失败，请重试';
+                    registerError.style.display = 'block';
+                }
+            } catch (error) {
+                registerError.textContent = error.message || '注册失败，请检查网络连接';
+                registerError.style.display = 'block';
+            } finally {
+                registerBtn.disabled = false;
+                registerBtn.querySelector('.btn-text').style.display = 'inline';
+                registerBtn.querySelector('.btn-loading').style.display = 'none';
+            }
+        });
+
+        // 如果已登录，直接跳转到首页
+        if (authService.isAuthenticated()) {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

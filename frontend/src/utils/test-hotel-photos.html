@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>酒店图片数据测试</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            background: #00aa6c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        button:hover {
+            background: #009959;
+        }
+        .hotel-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #fafafa;
+        }
+        .hotel-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .hotel-info {
+            font-size: 14px;
+            color: #666;
+            margin: 5px 0;
+        }
+        .photos-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .photo {
+            width: 150px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .no-photo {
+            color: #999;
+            font-style: italic;
+        }
+        .raw-data {
+            background: #2d2d2d;
+            color: #d4d4d4;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .status.loading {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        .status.success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .status.error {
+            background: #ffebee;
+            color: #c62828;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🖼️ 高德地图酒店图片数据测试</h1>
+        <button onclick="testHotelPhotos()">🔍 测试获取酒店图片</button>
+        <div id="status"></div>
+        <div id="results"></div>
+    </div>
+
+    <script type="module">
+        import mapUtil from './map.js';
+
+        window.testHotelPhotos = async function() {
+            const statusDiv = document.getElementById('status');
+            const resultsDiv = document.getElementById('results');
+
+            statusDiv.innerHTML = '<div class="status loading">🔄 正在搜索酒店数据...</div>';
+            resultsDiv.innerHTML = '';
+
+            try {
+                // 加载地图API
+                await mapUtil.loadMapScript();
+
+                // 搜索北京王府井附近的酒店（这里酒店比较多且知名）
+                const center = [116.417592, 39.917723]; // 王府井
+                const hotels = await mapUtil.searchNearbyHotels(center, {
+                    radius: 2000,
+                    pageSize: 10
+                });
+
+                if (hotels && hotels.length > 0) {
+                    statusDiv.innerHTML = `<div class="status success">✅ 找到 ${hotels.length} 家酒店，正在分析数据...</div>`;
+
+                    let hasPhotos = 0;
+                    let hasRating = 0;
+                    let hasCost = 0;
+
+                    hotels.forEach((hotel, index) => {
+                        if (hotel.photos && hotel.photos.length > 0) hasPhotos++;
+                        if (hotel.rating) hasRating++;
+                        if (hotel.cost) hasCost++;
+
+                        const card = document.createElement('div');
+                        card.className = 'hotel-card';
+
+                        let photosHtml = '';
+                        if (hotel.photos && hotel.photos.length > 0) {
+                            photosHtml = '<div class="photos-container">';
+                            hotel.photos.forEach(photo => {
+                                photosHtml += `<img src="${photo.url}" class="photo" alt="${hotel.name}" onerror="this.style.display='none'">`;
+                            });
+                            photosHtml += '</div>';
+                        } else {
+                            photosHtml = '<div class="no-photo">❌ 无图片数据</div>';
+                        }
+
+                        card.innerHTML = `
+                            <div class="hotel-name">${index + 1}. ${hotel.name}</div>
+                            <div class="hotel-info">📍 ${hotel.address}</div>
+                            <div class="hotel-info">📞 ${hotel.tel}</div>
+                            <div class="hotel-info">📏 距离: ${mapUtil.formatDistance(hotel.distance)}</div>
+                            ${hotel.rating ? `<div class="hotel-info">⭐ 评分: ${hotel.rating}</div>` : ''}
+                            ${hotel.cost ? `<div class="hotel-info">💰 人均: ${hotel.cost}</div>` : ''}
+                            ${hotel.website ? `<div class="hotel-info">🌐 官网: ${hotel.website}</div>` : ''}
+                            ${photosHtml}
+                            <details>
+                                <summary style="cursor: pointer; color: #666; margin-top: 10px;">查看原始数据</summary>
+                                <pre class="raw-data">${JSON.stringify(hotel, null, 2)}</pre>
+                            </details>
+                        `;
+                        resultsDiv.appendChild(card);
+                    });
+
+                    // 统计信息
+                    const statsDiv = document.createElement('div');
+                    statsDiv.className = 'status success';
+                    statsDiv.innerHTML = `
+                        <strong>📊 数据统计：</strong><br>
+                        - 有图片的酒店: ${hasPhotos} / ${hotels.length} (${(hasPhotos/hotels.length*100).toFixed(1)}%)<br>
+                        - 有评分的酒店: ${hasRating} / ${hotels.length} (${(hasRating/hotels.length*100).toFixed(1)}%)<br>
+                        - 有价格的酒店: ${hasCost} / ${hotels.length} (${(hasCost/hotels.length*100).toFixed(1)}%)
+                    `;
+                    resultsDiv.insertBefore(statsDiv, resultsDiv.firstChild);
+
+                    if (hasPhotos === 0) {
+                        statusDiv.innerHTML += `
+                            <div class="status error" style="margin-top: 10px;">
+                                ⚠️ <strong>高德地图POI搜索API不提供酒店图片</strong><br><br>
+                                高德地图的基础POI搜索主要提供地理位置信息，不包含酒店图片。<br><br>
+                                <strong>获取酒店图片的替代方案：</strong><br>
+                                1. 使用携程、去哪儿、飞猪等OTA平台API<br>
+                                2. 使用美团、大众点评API<br>
+                                3. 使用Google Places API（国外）<br>
+                                4. 爬取酒店官网或预订平台（需遵守robots.txt）
+                            </div>
+                        `;
+                    }
+
+                } else {
+                    statusDiv.innerHTML = '<div class="status error">❌ 未找到酒店数据</div>';
+                }
+
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="status error">❌ 测试失败: ${error.message}</div>`;
+                console.error(error);
+            }
+        };
+    </script>
+</body>
+</html>

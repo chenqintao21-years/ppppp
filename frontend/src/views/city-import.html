@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>城市数据自动导入 - TripAdvisor</title>
+    <link rel="stylesheet" href="../styles/components/citySearchModal.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 16px;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 40px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .feature-card {
+            padding: 24px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            transition: transform 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .feature-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .feature-desc {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #00aa6c;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #008c5a;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 170, 108, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .stats-section {
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .stat-card {
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 24px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌍 城市数据自动导入</h1>
+        <p class="subtitle">一键搜索并导入城市的酒店、景点、美食信息</p>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🏨</div>
+                <div class="feature-title">酒店信息</div>
+                <div class="feature-desc">自动获取城市内的酒店数据</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎭</div>
+                <div class="feature-title">景点玩乐</div>
+                <div class="feature-desc">导入热门景点和旅游信息</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🍜</div>
+                <div class="feature-title">美食餐厅</div>
+                <div class="feature-desc">收录当地特色美食餐厅</div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button id="searchCityBtn" class="btn btn-primary">
+                🔍 搜索城市并导入
+            </button>
+            <button id="useLocationBtn" class="btn btn-secondary">
+                📍 使用当前位置
+            </button>
+        </div>
+
+        <div class="stats-section">
+            <h3 style="color: #333; margin-bottom: 8px;">已导入数据统计</h3>
+            <p style="color: #666; font-size: 14px;">实时更新</p>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalHotels">0</div>
+                    <div class="stat-label">酒店</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalAttractions">0</div>
+                    <div class="stat-label">景点</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalRestaurants">0</div>
+                    <div class="stat-label">餐厅</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { citySearchModal } from '../components/citySearchModal.js';
+        import { cityAutoImportService } from '../services/cityAutoImport.js';
+
+        // 搜索城市按钮
+        document.getElementById('searchCityBtn').addEventListener('click', () => {
+            citySearchModal.open((data) => {
+                console.log('城市数据导入成功:', data);
+                updateStats();
+
+                // 可以跳转到相应页面
+                setTimeout(() => {
+                    alert(`${data.city} 的数据已导入！\n酒店: ${data.imported.hotels}\n景点: ${data.imported.attractions}\n餐厅: ${data.imported.restaurants}`);
+                }, 500);
+            });
+        });
+
+        // 使用当前位置按钮
+        document.getElementById('useLocationBtn').addEventListener('click', async () => {
+            try {
+                const response = await cityAutoImportService.getCurrentLocation();
+
+                if (response.success && response.data.city) {
+                    const city = response.data.city;
+
+                    if (confirm(`检测到您当前在 ${city}，是否导入该城市的数据？`)) {
+                        // 直接导入
+                        const importResponse = await cityAutoImportService.autoImportCity({ city });
+
+                        if (importResponse.success) {
+                            const { imported } = importResponse.data;
+                            alert(`${city} 的数据导入成功！\n酒店: ${imported.hotels}\n景点: ${imported.attractions}\n餐厅: ${imported.restaurants}`);
+                            updateStats();
+                        }
+                    }
+                } else {
+                    alert('无法获取当前位置，请手动搜索城市');
+                }
+            } catch (error) {
+                console.error('获取位置失败:', error);
+                alert('获取位置失败，请手动搜索城市');
+            }
+        });
+
+        // 更新统计数据
+        async function updateStats() {
+            try {
+                const response = await cityAutoImportService.getImportedCities();
+
+                if (response.success && response.data.length > 0) {
+                    let totalHotels = 0;
+                    let totalAttractions = 0;
+                    let totalRestaurants = 0;
+
+                    for (const city of response.data) {
+                        const statsResponse = await cityAutoImportService.getCityStats(city.city);
+                        if (statsResponse.success) {
+                            totalHotels += statsResponse.data.hotels;
+                            totalAttractions += statsResponse.data.attractions;
+                            totalRestaurants += statsResponse.data.restaurants;
+                        }
+                    }
+
+                    document.getElementById('totalHotels').textContent = totalHotels;
+                    document.getElementById('totalAttractions').textContent = totalAttractions;
+                    document.getElementById('totalRestaurants').textContent = totalRestaurants;
+                }
+            } catch (error) {
+                console.error('更新统计失败:', error);
+            }
+        }
+
+        // 页面加载时更新统计
+        updateStats();
+    </script>
+</body>
+</html>

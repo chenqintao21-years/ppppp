@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>城市搜索与自动导入 - Tripadvisor</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .page-header h1 {
+            font-size: 48px;
+            margin: 0 0 20px 0;
+        }
+
+        .page-header p {
+            font-size: 20px;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .back-button:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: -40px auto 60px;
+            padding: 0 20px;
+        }
+
+        .main-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .feature-section {
+            padding: 40px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .feature-section:last-child {
+            border-bottom: none;
+        }
+
+        .feature-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-description {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: start;
+            gap: 12px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .feature-item-content h4 {
+            margin: 0 0 5px 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .feature-item-content p {
+            margin: 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .demo-section {
+            background: #f9f9f9;
+            padding: 60px 20px;
+        }
+
+        .demo-title {
+            text-align: center;
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 32px;
+            }
+
+            .page-header p {
+                font-size: 16px;
+            }
+
+            .feature-section {
+                padding: 30px 20px;
+            }
+
+            .feature-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-button">← 返回首页</a>
+
+    <div class="page-header">
+        <h1>🌍 城市搜索与自动导入</h1>
+        <p>智能搜索城市，一键导入酒店、景点、美食信息，让旅行规划更简单</p>
+    </div>
+
+    <div class="container">
+        <div class="main-card">
+            <div class="feature-section">
+                <div class="feature-title">
+                    <span>✨</span>
+                    <span>功能特点</span>
+                </div>
+                <div class="feature-description">
+                    这是一个强大的城市数据自动导入工具，基于高德地图API，可以快速搜索城市并自动导入该城市的酒店、景点、美食等信息。
+                </div>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">🔍</div>
+                        <div class="feature-item-content">
+                            <h4>智能搜索</h4>
+                            <p>支持城市名称模糊搜索，快速找到目标城市</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📍</div>
+                        <div class="feature-item-content">
+                            <h4>自动定位</h4>
+                            <p>使用高德地图自动定位当前所在城市</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🏨</div>
+                        <div class="feature-item-content">
+                            <h4>酒店导入</h4>
+                            <p>自动搜索并导入城市内的酒店信息</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🎭</div>
+                        <div class="feature-item-content">
+                            <h4>景点导入</h4>
+                            <p>自动搜索并导入城市内的景点信息</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🍜</div>
+                        <div class="feature-item-content">
+                            <h4>美食导入</h4>
+                            <p>自动搜索并导入城市内的餐厅美食信息</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">⚡</div>
+                        <div class="feature-item-content">
+                            <h4>批量处理</h4>
+                            <p>一键导入，并行处理，快速高效</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-section">
+                <div class="feature-title">
+                    <span>📋</span>
+                    <span>使用说明</span>
+                </div>
+                <div class="feature-description">
+                    <ol style="line-height: 2; padding-left: 20px;">
+                        <li><strong>搜索城市：</strong>在搜索框中输入城市名称（如：北京、上海、杭州），点击"搜索城市"按钮</li>
+                        <li><strong>选择城市：</strong>从搜索结果中选择目标城市，点击城市卡片</li>
+                        <li><strong>自动导入：</strong>系统会自动搜索该城市的酒店、景点、美食信息并展示</li>
+                        <li><strong>使用定位：</strong>也可以直接点击"使用当前定位"按钮，自动定位并导入当前城市数据</li>
+                        <li><strong>查看结果：</strong>导入完成后，可以切换标签查看不同类型的数据</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2 class="demo-title">开始使用</h2>
+        <div id="citySearchImportContainer"></div>
+    </div>
+
+    <!-- 引入必要的脚本 -->
+    <script type="module">
+        import CitySearchImportUI from './src/components/city-search-import.js';
+
+        // 初始化组件
+        document.addEventListener('DOMContentLoaded', () => {
+            new CitySearchImportUI('citySearchImportContainer');
+        });
+    </script>
+</body>
+</html>

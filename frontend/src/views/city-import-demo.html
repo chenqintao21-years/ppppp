@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>使用示例 - 城市自动导入</title>
+    <link rel="stylesheet" href="../styles/components/citySearchModal.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background: #f5f5f5;
+        }
+
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .demo-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .demo-section h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: #00aa6c;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #008c5a;
+        }
+
+        button.secondary {
+            background: #667eea;
+        }
+
+        button.secondary:hover {
+            background: #5568d3;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin-top: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .result-panel {
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .result-panel.show {
+            display: block;
+        }
+
+        .result-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .result-content {
+            color: #666;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1>🌍 城市自动导入功能 - 使用示例</h1>
+        <p class="description">
+            这个功能允许你搜索任意城市，并自动从高德地图获取该城市的酒店、景点、餐厅信息，
+            然后导入到数据库中。支持手动搜索城市和自动定位当前位置。
+        </p>
+
+        <!-- 示例1: 打开搜索模态框 -->
+        <div class="demo-section">
+            <h2>示例 1: 打开城市搜索模态框</h2>
+            <p>点击按钮打开城市搜索对话框，输入城市名称进行搜索</p>
+            <div class="button-group">
+                <button id="openModalBtn">🔍 打开城市搜索</button>
+            </div>
+            <div class="code-block">
+import { citySearchModal } from '../components/citySearchModal.js';
+
+// 打开模态框
+citySearchModal.open((data) => {
+    console.log('导入成功:', data);
+    // data 包含: city, location, imported (hotels, attractions, restaurants)
+});
+            </div>
+        </div>
+
+        <!-- 示例2: 获取当前位置 -->
+        <div class="demo-section">
+            <h2>示例 2: 获取当前位置</h2>
+            <p>使用高德地图API获取用户当前位置</p>
+            <div class="button-group">
+                <button id="getCurrentLocationBtn" class="secondary">📍 获取当前位置</button>
+            </div>
+            <div id="locationResult" class="result-panel">
+                <div class="result-title">定位结果:</div>
+                <div class="result-content" id="locationContent"></div>
+            </div>
+            <div class="code-block">
+import { amapLocationService } from '../utils/amapLocation.js';
+
+// 获取当前位置
+const result = await amapLocationService.getCurrentPosition();
+console.log('当前位置:', result);
+// result 包含: city, province, position {lng, lat}, address
+            </div>
+        </div>
+
+        <!-- 示例3: 直接导入城市数据 -->
+        <div class="demo-section">
+            <h2>示例 3: 直接导入城市数据</h2>
+            <p>不打开模态框，直接调用API导入指定城市的数据</p>
+            <div class="button-group">
+                <button id="importBeijingBtn">导入北京数据</button>
+                <button id="importShanghaiBtn">导入上海数据</button>
+                <button id="importGuangzhouBtn">导入广州数据</button>
+            </div>
+            <div id="importResult" class="result-panel">
+                <div class="result-title">导入结果:</div>
+                <div class="result-content" id="importContent"></div>
+            </div>
+            <div class="code-block">
+import { cityAutoImportService } from '../services/cityAutoImport.js';
+
+// 导入指定城市
+const response = await cityAutoImportService.autoImportCity({
+    city: '北京'
+});
+
+if (response.success) {
+    console.log('导入成功:', response.data);
+    // response.data.imported: {hotels: 50, attractions: 50, restaurants: 50}
+}
+            </div>
+        </div>
+
+        <!-- 示例4: 搜索城市建议 -->
+        <div class="demo-section">
+            <h2>示例 4: 搜索城市建议</h2>
+            <p>输入关键词获取城市搜索建议</p>
+            <input type="text" id="citySearchInput" placeholder="输入城市名称..."
+                   style="padding: 10px; width: 300px; border: 1px solid #ddd; border-radius: 4px; margin-right: 10px;">
+            <button id="searchCityBtn" class="secondary">搜索</button>
+            <div id="searchResult" class="result-panel">
+                <div class="result-title">搜索结果:</div>
+                <div class="result-content" id="searchContent"></div>
+            </div>
+            <div class="code-block">
+import { cityAutoImportService } from '../services/cityAutoImport.js';
+
+// 搜索城市
+const response = await cityAutoImportService.searchCity('北京');
+console.log('搜索结果:', response.data);
+            </div>
+        </div>
+
+        <!-- 示例5: 集成到现有页面 -->
+        <div class="demo-section">
+            <h2>示例 5: 集成到现有页面</h2>
+            <p>在酒店、景点、餐厅页面添加"导入城市数据"按钮</p>
+            <div class="code-block">
+<!-- 在HTML中添加按钮 -->
+&lt;button id="importCityBtn"&gt;📥 导入城市数据&lt;/button&gt;
+
+&lt;script type="module"&gt;
+import { citySearchModal } from '../components/citySearchModal.js';
+
+document.getElementById('importCityBtn').addEventListener('click', () => {
+    citySearchModal.open((data) => {
+        // 导入成功后刷新页面数据
+        location.reload();
+    });
+});
+&lt;/script&gt;
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { citySearchModal } from '../components/citySearchModal.js';
+        import { cityAutoImportService } from '../services/cityAutoImport.js';
+        import { amapLocationService } from '../utils/amapLocation.js';
+
+        // 示例1: 打开模态框
+        document.getElementById('openModalBtn').addEventListener('click', () => {
+            citySearchModal.open((data) => {
+                console.log('导入成功:', data);
+                alert(`${data.city} 数据导入成功！\n酒店: ${data.imported.hotels}\n景点: ${data.imported.attractions}\n餐厅: ${data.imported.restaurants}`);
+            });
+        });
+
+        // 示例2: 获取当前位置
+        document.getElementById('getCurrentLocationBtn').addEventListener('click', async () => {
+            try {
+                const result = await amapLocationService.getCurrentPosition();
+                document.getElementById('locationResult').classList.add('show');
+                document.getElementById('locationContent').textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                alert('获取位置失败: ' + error.message);
+            }
+        });
+
+        // 示例3: 直接导入城市数据
+        async function importCity(cityName) {
+            const resultPanel = document.getElementById('importResult');
+            const resultContent = document.getElementById('importContent');
+
+            resultPanel.classList.add('show');
+            resultContent.textContent = `正在导入 ${cityName} 的数据...`;
+
+            try {
+                const response = await cityAutoImportService.autoImportCity({ city: cityName });
+
+                if (response.success) {
+                    resultContent.textContent = JSON.stringify(response.data, null, 2);
+                    alert(`${cityName} 数据导入成功！`);
+                } else {
+                    resultContent.textContent = '导入失败: ' + response.message;
+                }
+            } catch (error) {
+                resultContent.textContent = '导入失败: ' + error.message;
+            }
+        }
+
+        document.getElementById('importBeijingBtn').addEventListener('click', () => importCity('北京'));
+        document.getElementById('importShanghaiBtn').addEventListener('click', () => importCity('上海'));
+        document.getElementById('importGuangzhouBtn').addEventListener('click', () => importCity('广州'));
+
+        // 示例4: 搜索城市
+        document.getElementById('searchCityBtn').addEventListener('click', async () => {
+            const query = document.getElementById('citySearchInput').value.trim();
+
+            if (!query) {
+                alert('请输入城市名称');
+                return;
+            }
+
+            const resultPanel = document.getElementById('searchResult');
+            const resultContent = document.getElementById('searchContent');
+
+            resultPanel.classList.add('show');
+            resultContent.textContent = '搜索中...';
+
+            try {
+                const response = await cityAutoImportService.searchCity(query);
+                resultContent.textContent = JSON.stringify(response.data, null, 2);
+            } catch (error) {
+                resultContent.textContent = '搜索失败: ' + error.message;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>百度地图API原始数据调试</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+        }
+        h1 {
+            color: #2196F3;
+        }
+        button {
+            padding: 12px 24px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        button:hover {
+            background: #1976D2;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            background: #2d2d2d;
+        }
+        .hotel-debug {
+            background: #2d2d2d;
+            border: 1px solid #404040;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .hotel-name {
+            font-size: 18px;
+            color: #2196F3;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .field {
+            margin: 8px 0;
+            padding: 8px;
+            background: #1e1e1e;
+            border-radius: 4px;
+        }
+        .field-name {
+            color: #569cd6;
+            display: inline-block;
+            min-width: 180px;
+        }
+        .field-value {
+            color: #ce9178;
+        }
+        .field-value.null {
+            color: #666;
+            font-style: italic;
+        }
+        .field-value.object {
+            color: #dcdcaa;
+        }
+        pre {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            line-height: 1.5;
+        }
+        .highlight {
+            background: #1e3a5f;
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+        .section-title {
+            color: #2196F3;
+            margin: 30px 0 20px 0;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 百度地图API原始数据调试</h1>
+    <button onclick="debugAPI()">开始调试</button>
+    <div id="status"></div>
+    <div id="results"></div>
+
+    <script>
+        const AK = 'FlIOoHHsXEzP6tN4a2PnhQ1clsGfhB5D';
+
+        // JSONP请求函数
+        function jsonp(url) {
+            return new Promise((resolve, reject) => {
+                const callbackName = 'jsonp_callback_' + Date.now() + '_' + Math.random().toString(36).substr(2);
+
+                window[callbackName] = function(data) {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    resolve(data);
+                };
+
+                const script = document.createElement('script');
+                script.src = url + '&callback=' + callbackName;
+                script.onerror = () => {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    reject(new Error('JSONP request failed'));
+                };
+                document.body.appendChild(script);
+            });
+        }
+
+        async function debugAPI() {
+            const statusDiv = document.getElementById('status');
+            const resultsDiv = document.getElementById('results');
+
+            statusDiv.innerHTML = '<div class="status">🔄 正在获取数据...</div>';
+            resultsDiv.innerHTML = '';
+
+            try {
+                // 测试多个城市
+                const testLocations = [
+                    { name: '北京王府井', city: '北京', query: '酒店' },
+                    { name: '上海外滩', city: '上海', query: '酒店' },
+                    { name: '广州天河', city: '广州', query: '酒店' }
+                ];
+
+                for (const location of testLocations) {
+                    statusDiv.innerHTML = `<div class="status">🔄 正在测试: ${location.name}</div>`;
+
+                    // 搜索地点 - 使用JSONP
+                    const searchUrl = `https://api.map.baidu.com/place/v2/search?query=${encodeURIComponent(location.query)}&region=${encodeURIComponent(location.city)}&output=json&ak=${AK}&page_size=3`;
+
+                    const result = await jsonp(searchUrl);
+
+                    if (result.status === 0 && result.results) {
+                        const locationDiv = document.createElement('div');
+                        locationDiv.innerHTML = `<h2 class="section-title">📍 ${location.name} - 找到 ${result.total} 个结果（显示前3个）</h2>`;
+                        resultsDiv.appendChild(locationDiv);
+
+                        // 获取每个POI的详情
+                        for (let i = 0; i < result.results.length; i++) {
+                            const poi = result.results[i];
+
+                            // 获取详情 - 使用JSONP
+                            const detailUrl = `https://api.map.baidu.com/place/v2/detail?uid=${poi.uid}&output=json&ak=${AK}&scope=2`;
+                            const detailResult = await jsonp(detailUrl);
+
+                            let detailInfo = {};
+                            let photos = [];
+                            if (detailResult.status === 0 && detailResult.result) {
+                                detailInfo = detailResult.result.detail_info || {};
+                                // 尝试获取图片数组
+                                photos = detailResult.result.photos || detailInfo.photos || [];
+                            }
+
+                            const debugDiv = document.createElement('div');
+                            debugDiv.className = 'hotel-debug';
+
+                            // 检查关键字段
+                            const hasRating = detailInfo.overall_rating;
+                            const hasPrice = detailInfo.price;
+                            const hasPhotos = detailInfo.image_num && parseInt(detailInfo.image_num) > 0;
+                            const hasComments = detailInfo.comment_num && parseInt(detailInfo.comment_num) > 0;
+                            const hasPhotoUrls = photos && photos.length > 0;
+
+                            let fieldsHtml = `
+                                <div class="hotel-name">${i + 1}. ${poi.name}</div>
+
+                                <div class="field">
+                                    <span class="field-name">uid:</span>
+                                    <span class="field-value">${poi.uid || 'null'}</span>
+                                </div>
+
+                                <div class="field">
+                                    <span class="field-name">address:</span>
+                                    <span class="field-value">${poi.address || 'null'}</span>
+                                </div>
+
+                                <div class="field">
+                                    <span class="field-name">telephone:</span>
+                                    <span class="field-value">${poi.telephone || detailResult.result?.telephone || 'null'}</span>
+                                </div>
+
+                                <div class="field ${hasRating ? 'highlight' : ''}">
+                                    <span class="field-name">⭐ overall_rating:</span>
+                                    <span class="field-value ${hasRating ? '' : 'null'}">${hasRating || '❌ 无评分数据'}</span>
+                                </div>
+
+                                <div class="field ${detailInfo.service_rating ? 'highlight' : ''}">
+                                    <span class="field-name">⭐ service_rating:</span>
+                                    <span class="field-value ${detailInfo.service_rating ? '' : 'null'}">${detailInfo.service_rating || '❌ 无'}</span>
+                                </div>
+
+                                <div class="field ${detailInfo.facility_rating ? 'highlight' : ''}">
+                                    <span class="field-name">⭐ facility_rating:</span>
+                                    <span class="field-value ${detailInfo.facility_rating ? '' : 'null'}">${detailInfo.facility_rating || '❌ 无'}</span>
+                                </div>
+
+                                <div class="field ${detailInfo.hygiene_rating ? 'highlight' : ''}">
+                                    <span class="field-name">⭐ hygiene_rating:</span>
+                                    <span class="field-value ${detailInfo.hygiene_rating ? '' : 'null'}">${detailInfo.hygiene_rating || '❌ 无'}</span>
+                                </div>
+
+                                <div class="field ${hasPrice ? 'highlight' : ''}">
+                                    <span class="field-name">💰 price:</span>
+                                    <span class="field-value ${hasPrice ? '' : 'null'}">${hasPrice || '❌ 无价格数据'}</span>
+                                </div>
+
+                                <div class="field ${hasPhotos ? 'highlight' : ''}">
+                                    <span class="field-name">📷 image_num:</span>
+                                    <span class="field-value ${hasPhotos ? '' : 'null'}">${hasPhotos ? `${detailInfo.image_num} 张图片` : '❌ 无图片'}</span>
+                                </div>
+
+                                ${hasPhotoUrls ? `
+                                <div class="field highlight">
+                                    <span class="field-name">📷 photos数组:</span>
+                                    <span class="field-value">找到 ${photos.length} 张图片URL</span>
+                                </div>
+                                <div class="field highlight">
+                                    <span class="field-name">📷 图片预览:</span>
+                                    <div style="margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap;">
+                                        ${photos.slice(0, 5).map(photo => `
+                                            <img src="${photo.url || photo}"
+                                                 style="width: 150px; height: 100px; object-fit: cover; border-radius: 4px; border: 1px solid #404040;"
+                                                 alt="${poi.name}"
+                                                 onerror="this.style.border='2px solid red'; this.alt='图片加载失败'">
+                                        `).join('')}
+                                    </div>
+                                </div>
+                                ` : ''}
+
+                                <div class="field ${hasComments ? 'highlight' : ''}">
+                                    <span class="field-name">💬 comment_num:</span>
+                                    <span class="field-value ${hasComments ? '' : 'null'}">${hasComments ? `${detailInfo.comment_num} 条评论` : '❌ 无评论'}</span>
+                                </div>
+
+                                <div class="field">
+                                    <span class="field-name">brand:</span>
+                                    <span class="field-value ${detailInfo.brand ? '' : 'null'}">${detailInfo.brand || 'null'}</span>
+                                </div>
+
+                                <div class="field">
+                                    <span class="field-name">level (星级):</span>
+                                    <span class="field-value ${detailInfo.level ? '' : 'null'}">${detailInfo.level || 'null'}</span>
+                                </div>
+
+                                <div class="field">
+                                    <span class="field-name">hotel_service:</span>
+                                    <span class="field-value ${detailInfo.hotel_service ? '' : 'null'}">${detailInfo.hotel_service || 'null'}</span>
+                                </div>
+
+                                <div class="field">
+                                    <span class="field-name">inner_facility:</span>
+                                    <span class="field-value ${detailInfo.inner_facility ? '' : 'null'}">${detailInfo.inner_facility || 'null'}</span>
+                                </div>
+
+                                <div class="field">
+                                    <span class="field-name">shop_hours:</span>
+                                    <span class="field-value ${detailInfo.shop_hours ? '' : 'null'}">${detailInfo.shop_hours || 'null'}</span>
+                                </div>
+
+                                <div class="field">
+                                    <span class="field-name">detail_url:</span>
+                                    <span class="field-value ${detailInfo.detail_url ? '' : 'null'}">${detailInfo.detail_url ? `<a href="${detailInfo.detail_url}" target="_blank" style="color: #2196F3;">查看网页版</a>` : 'null'}</span>
+                                </div>
+
+                                <div class="field">
+                                    <span class="field-name">detail_info (完整对象):</span>
+                                    <span class="field-value object">${JSON.stringify(detailInfo).substring(0, 100)}...</span>
+                                </div>
+                            `;
+
+                            debugDiv.innerHTML = fieldsHtml + `
+                                <details style="margin-top: 15px;">
+                                    <summary style="cursor: pointer; color: #888;">查看搜索结果完整JSON</summary>
+                                    <pre>${JSON.stringify(poi, null, 2)}</pre>
+                                </details>
+                                <details style="margin-top: 10px;">
+                                    <summary style="cursor: pointer; color: #888;">查看详情接口完整JSON</summary>
+                                    <pre>${JSON.stringify(detailResult, null, 2)}</pre>
+                                </details>
+                            `;
+
+                            resultsDiv.appendChild(debugDiv);
+                        }
+                    } else {
+                        const errorDiv = document.createElement('div');
+                        errorDiv.className = 'hotel-debug';
+                        errorDiv.innerHTML = `
+                            <div class="hotel-name">❌ ${location.name} - 搜索失败</div>
+                            <div class="field">
+                                <span class="field-name">错误信息:</span>
+                                <span class="field-value">${result.message || '未知错误'}</span>
+                            </div>
+                            <pre>${JSON.stringify(result, null, 2)}</pre>
+                        `;
+                        resultsDiv.appendChild(errorDiv);
+                    }
+                }
+
+                statusDiv.innerHTML = `
+                    <div class="status">
+                        ✅ 调试完成<br><br>
+                        <strong>百度地图API数据总结：</strong><br>
+                        • <span class="highlight">评分数据</span>: overall_rating, service_rating, facility_rating, hygiene_rating<br>
+                        • <span class="highlight">价格数据</span>: price 字段（通常为空）<br>
+                        • <span class="highlight">图片数据</span>: image_num 显示数量，但不提供图片URL<br>
+                        • <span class="highlight">评论数据</span>: comment_num 显示数量，但不提供评论内容<br>
+                        • <span class="highlight">设施信息</span>: hotel_service, inner_facility<br>
+                        • <span class="highlight">星级信息</span>: level<br><br>
+                        <strong>限制：</strong><br>
+                        百度地图API不提供实际的图片URL、评论内容、房型信息和实时价格。<br>
+                        这些数据需要通过 detail_url 访问网页版或使用OTA平台API。
+                    </div>
+                `;
+
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="status">❌ 调试失败: ${error.message}</div>`;
+                console.error(error);
+            }
+        }
+    </script>
+</body>
+</html>

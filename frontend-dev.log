@@ -1,0 +1,52 @@
+
+> tripadvisor-frontend@1.0.0 dev
+> vite
+
+
+  [32m[1mVITE[22m v5.4.21[39m  [2mready in [0m[1m619[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5173[22m/[39m
+[2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[2m02:38:54[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mviews/auth.html[22m
+[2m02:40:54[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mviews/index.html[22m
+[2m02:41:18[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mviews/index.html[22m
+[2m02:42:03[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mviews/index.html[22m
+[2m02:42:24[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mviews/index.html[22m
+[2m02:44:45[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mviews/my-bookings.html[22m
+[2m02:45:26[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mviews/my-reviews.html[22m
+[2m02:57:37[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mviews/favorites.html[22m
+[2m03:28:14[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mviews/auth.html[22m
+[2m03:29:46[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mviews/auth.html[22m
+[2m03:30:28[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mviews/auth.html[22m
+[2m03:31:38[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mservices/auth.js[22m
+[2m03:31:49[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mutils/auth.js[22m
+[2m03:32:13[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mviews/test-auth.html[22m
+[2m03:39:04[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mviews/debug-login.html[22m
+[2m03:45:30[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mviews/test-user-status.html[22m
+[2m03:54:08[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mpages/home.js[22m
+[2m04:18:19[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mviews/attraction-detail.html[22m
+[2m05:03:02[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mviews/hotel-detail.html[22m
+[2m05:03:18[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mpages/hotels/detail.js[22m
+[2m05:03:28[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mpages/hotels/detail.js[22m
+[2m05:03:54[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mviews/hotel-detail.html[22m
+[2m05:08:12[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mviews/hotel-detail.html[22m
+[2m05:09:53[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mpages/hotels/detail.js[22m
+[2m05:13:58[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mpages/hotels/detail.js[22m
+[2m05:16:57[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mviews/hotel-detail.html[22m
+[2m05:19:19[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mconfig/hotel-detail-config.js[22m
+[2m05:22:31[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mviews/config-test.html[22m
+[2m05:28:23[22m [31m[1m[vite][22m[39m [31mInternal server error: URI malformed[39m
+      at decodeURI (<anonymous>)
+      at viteServeStaticMiddleware (file:///E:/ppppp/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51683:22)
+      at call (file:///E:/ppppp/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:41364:7)
+      at next (file:///E:/ppppp/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:41308:5)
+      at viteServeRawFsMiddleware (file:///E:/ppppp/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51740:7)
+      at call (file:///E:/ppppp/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:41364:7)
+      at next (file:///E:/ppppp/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:41308:5)
+      at viteTransformMiddleware (file:///E:/ppppp/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:62020:14)
+      at call (file:///E:/ppppp/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:41364:7)
+      at next (file:///E:/ppppp/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:41308:5)
+[2m05:29:32[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mpages/home.js[22m
+[2m05:40:24[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mpages/home.js[22m
+[2m06:06:31[22m [36m[1m[vite][22m[39m [32mvite.config.js changed, restarting server...[39m
+[2m06:06:31[22m [36m[1m[vite][22m[39m server restarted.

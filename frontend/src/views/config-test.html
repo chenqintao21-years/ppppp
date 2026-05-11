@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>配置测试 - 酒店详情</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #00AA6C;
+            padding-bottom: 10px;
+        }
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .icon-item {
+            text-align: center;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .icon-item svg {
+            color: #00AA6C;
+        }
+        .icon-item span {
+            display: block;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+        .label-list {
+            list-style: none;
+            padding: 0;
+        }
+        .label-list li {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        .label-list li strong {
+            color: #00AA6C;
+            min-width: 150px;
+            display: inline-block;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .test-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .test-links a {
+            padding: 10px 20px;
+            background: #00AA6C;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        .test-links a:hover {
+            background: #008c5a;
+        }
+    </style>
+</head>
+<body>
+    <h1>🏨 酒店详情页面 - 动态配置测试</h1>
+
+    <div class="test-section">
+        <h2>📡 API连接测试</h2>
+        <div id="apiStatus" class="status">正在测试...</div>
+        <button onclick="testAPI()" style="padding: 10px 20px; background: #00AA6C; color: white; border: none; border-radius: 4px; cursor: pointer;">重新测试API</button>
+    </div>
+
+    <div class="test-section">
+        <h2>🏷️ 页面标签配置</h2>
+        <ul class="label-list" id="labelsList"></ul>
+    </div>
+
+    <div class="test-section">
+        <h2>🎨 设施图标配置</h2>
+        <div class="icon-grid" id="iconsGrid"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>⭐ 评分类别配置</h2>
+        <ul class="label-list" id="ratingCategories"></ul>
+    </div>
+
+    <div class="test-section">
+        <h2>👥 客人选项配置</h2>
+        <ul class="label-list" id="guestOptions"></ul>
+    </div>
+
+    <div class="test-section">
+        <h2>🔗 测试链接</h2>
+        <div class="test-links">
+            <a href="hotel-detail.html?id=1" target="_blank">酒店 ID=1</a>
+            <a href="hotel-detail.html?id=2" target="_blank">酒店 ID=2</a>
+            <a href="hotel-detail.html?id=7" target="_blank">酒店 ID=7</a>
+        </div>
+    </div>
+
+    <script type="module">
+        import {
+            API_BASE_URL,
+            PAGE_LABELS,
+            RATING_CATEGORIES,
+            GUEST_OPTIONS,
+            AMENITY_ICONS,
+            generateIconSVG
+        } from '../config/hotel-detail-config.js';
+
+        // 测试API连接
+        window.testAPI = async function() {
+            const statusDiv = document.getElementById('apiStatus');
+            statusDiv.className = 'status';
+            statusDiv.textContent = '正在测试API连接...';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/hotels/1`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    statusDiv.className = 'status success';
+                    statusDiv.innerHTML = `
+                        ✅ API连接成功！<br>
+                        <strong>API地址:</strong> ${API_BASE_URL}<br>
+                        <strong>测试酒店:</strong> ${result.data.name}<br>
+                        <strong>评分:</strong> ${result.data.rating} (${result.data.reviews} 条点评)
+                    `;
+                } else {
+                    throw new Error('API返回失败');
+                }
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = `
+                    ❌ API连接失败<br>
+                    <strong>错误:</strong> ${error.message}<br>
+                    <strong>API地址:</strong> ${API_BASE_URL}<br>
+                    <strong>建议:</strong> 请确保后端服务器正在运行 (npm start)
+                `;
+            }
+        };
+
+        // 显示页面标签
+        function displayLabels() {
+            const labelsList = document.getElementById('labelsList');
+            const labels = [
+                { key: '关于', value: PAGE_LABELS.about },
+                { key: '便利设施', value: PAGE_LABELS.amenities },
+                { key: '选择房间', value: PAGE_LABELS.rooms },
+                { key: '位置', value: PAGE_LABELS.location },
+                { key: '点评', value: PAGE_LABELS.reviews },
+                { key: '入住日期', value: PAGE_LABELS.booking.checkIn },
+                { key: '退房日期', value: PAGE_LABELS.booking.checkOut },
+                { key: '客人', value: PAGE_LABELS.booking.guests },
+                { key: '预订', value: PAGE_LABELS.booking.viewDeals },
+                { key: '保存', value: PAGE_LABELS.actions.save },
+                { key: '已保存', value: PAGE_LABELS.actions.saved },
+                { key: '分享', value: PAGE_LABELS.actions.share },
+                { key: '选择', value: PAGE_LABELS.actions.select }
+            ];
+
+            labelsList.innerHTML = labels.map(label =>
+                `<li><strong>${label.key}:</strong> ${label.value}</li>`
+            ).join('');
+        }
+
+        // 显示图标
+        function displayIcons() {
+            const iconsGrid = document.getElementById('iconsGrid');
+            const icons = Object.keys(AMENITY_ICONS);
+
+            iconsGrid.innerHTML = icons.map(iconType => `
+                <div class="icon-item">
+                    ${generateIconSVG(iconType, 32, 32)}
+                    <span>${iconType}</span>
+                </div>
+            `).join('');
+        }
+
+        // 显示评分类别
+        function displayRatingCategories() {
+            const categoriesList = document.getElementById('ratingCategories');
+            categoriesList.innerHTML = RATING_CATEGORIES.map(cat =>
+                `<li><strong>${cat.key}:</strong> ${cat.label}</li>`
+            ).join('');
+        }
+
+        // 显示客人选项
+        function displayGuestOptions() {
+            const optionsList = document.getElementById('guestOptions');
+            optionsList.innerHTML = GUEST_OPTIONS.map(opt =>
+                `<li><strong>值 ${opt.value}:</strong> ${opt.label}</li>`
+            ).join('');
+        }
+
+        // 初始化
+        testAPI();
+        displayLabels();
+        displayIcons();
+        displayRatingCategories();
+        displayGuestOptions();
+    </script>
+</body>
+</html>

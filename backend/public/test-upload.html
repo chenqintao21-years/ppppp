@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片上传测试</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .section h2 {
+            color: #555;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-weight: bold;
+        }
+
+        input[type="email"],
+        input[type="password"],
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        button {
+            background: #00a680;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background: #008c6a;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .result {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .result.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .result.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .preview {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .preview img {
+            max-width: 200px;
+            max-height: 200px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .token-info {
+            background: #e7f3ff;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 12px;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🖼️ 图片上传功能测试</h1>
+
+        <!-- 登录部分 -->
+        <div class="section">
+            <h2>1. 用户登录</h2>
+            <div class="form-group">
+                <label>邮箱:</label>
+                <input type="email" id="email" value="test@example.com">
+            </div>
+            <div class="form-group">
+                <label>密码:</label>
+                <input type="password" id="password" value="password123">
+            </div>
+            <button onclick="login()">登录</button>
+            <div id="loginResult"></div>
+            <div id="tokenInfo" class="token-info" style="display: none;"></div>
+        </div>
+
+        <!-- 上传头像 -->
+        <div class="section">
+            <h2>2. 上传头像</h2>
+            <div class="form-group">
+                <label>选择图片:</label>
+                <input type="file" id="avatarFile" accept="image/*">
+            </div>
+            <button onclick="uploadAvatar()" id="uploadAvatarBtn" disabled>上传头像</button>
+            <div id="avatarResult"></div>
+            <div id="avatarPreview" class="preview"></div>
+        </div>
+
+        <!-- 上传点评图片（单张） -->
+        <div class="section">
+            <h2>3. 上传点评图片（单张）</h2>
+            <div class="form-group">
+                <label>选择图片:</label>
+                <input type="file" id="reviewFile" accept="image/*">
+            </div>
+            <button onclick="uploadReview()" id="uploadReviewBtn" disabled>上传点评图片</button>
+            <div id="reviewResult"></div>
+            <div id="reviewPreview" class="preview"></div>
+        </div>
+
+        <!-- 批量上传 -->
+        <div class="section">
+            <h2>4. 批量上传图片</h2>
+            <div class="form-group">
+                <label>选择多张图片（最多10张）:</label>
+                <input type="file" id="multipleFiles" accept="image/*" multiple>
+            </div>
+            <button onclick="uploadMultiple()" id="uploadMultipleBtn" disabled>批量上传</button>
+            <div id="multipleResult"></div>
+            <div id="multiplePreview" class="preview"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000/api';
+        let authToken = '';
+
+        // 登录
+        async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('loginResult');
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.data.token) {
+                    authToken = data.data.token;
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = '✅ 登录成功！';
+
+                    // 显示token
+                    const tokenInfo = document.getElementById('tokenInfo');
+                    tokenInfo.style.display = 'block';
+                    tokenInfo.textContent = `Token: ${authToken.substring(0, 50)}...`;
+
+                    // 启用上传按钮
+                    document.getElementById('uploadAvatarBtn').disabled = false;
+                    document.getElementById('uploadReviewBtn').disabled = false;
+                    document.getElementById('uploadMultipleBtn').disabled = false;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = '❌ 登录失败: ' + data.message;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = '❌ 请求失败: ' + error.message;
+            }
+        }
+
+        // 上传头像
+        async function uploadAvatar() {
+            const fileInput = document.getElementById('avatarFile');
+            const resultDiv = document.getElementById('avatarResult');
+            const previewDiv = document.getElementById('avatarPreview');
+
+            if (!fileInput.files[0]) {
+                alert('请选择图片');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('image', fileInput.files[0]);
+
+            try {
+                const response = await fetch(`${API_BASE}/upload/avatar`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = '✅ 上传成功！';
+
+                    // 显示预览
+                    previewDiv.innerHTML = `
+                        <div>
+                            <p>原图:</p>
+                            <img src="http://localhost:3000${data.data.url}" alt="原图">
+                        </div>
+                        <div>
+                            <p>缩略图:</p>
+                            <img src="http://localhost:3000${data.data.thumbnail}" alt="缩略图">
+                        </div>
+                    `;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = '❌ 上传失败: ' + data.message;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = '❌ 请求失败: ' + error.message;
+            }
+        }
+
+        // 上传点评图片
+        async function uploadReview() {
+            const fileInput = document.getElementById('reviewFile');
+            const resultDiv = document.getElementById('reviewResult');
+            const previewDiv = document.getElementById('reviewPreview');
+
+            if (!fileInput.files[0]) {
+                alert('请选择图片');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('image', fileInput.files[0]);
+
+            try {
+                const response = await fetch(`${API_BASE}/upload/review`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = '✅ 上传成功！';
+
+                    previewDiv.innerHTML = `
+                        <div>
+                            <p>原图:</p>
+                            <img src="http://localhost:3000${data.data.url}" alt="原图">
+                        </div>
+                        <div>
+                            <p>缩略图:</p>
+                            <img src="http://localhost:3000${data.data.thumbnail}" alt="缩略图">
+                        </div>
+                    `;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = '❌ 上传失败: ' + data.message;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = '❌ 请求失败: ' + error.message;
+            }
+        }
+
+        // 批量上传
+        async function uploadMultiple() {
+            const fileInput = document.getElementById('multipleFiles');
+            const resultDiv = document.getElementById('multipleResult');
+            const previewDiv = document.getElementById('multiplePreview');
+
+            if (!fileInput.files.length) {
+                alert('请选择图片');
+                return;
+            }
+
+            const formData = new FormData();
+            for (let file of fileInput.files) {
+                formData.append('images', file);
+            }
+            formData.append('type', 'reviews');
+
+            try {
+                const response = await fetch(`${API_BASE}/upload/reviews`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = `✅ 成功上传 ${data.data.length} 张图片！`;
+
+                    previewDiv.innerHTML = data.data.map(img => `
+                        <div>
+                            <img src="http://localhost:3000${img.url}" alt="上传的图片">
+                        </div>
+                    `).join('');
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = '❌ 上传失败: ' + data.message;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = '❌ 请求失败: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>

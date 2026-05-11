@@ -1,0 +1,300 @@
+/**
+ * 收藏按钮样式
+ * 包含心跳动画和粒子效果
+ */
+
+/* 收藏按钮基础样式 */
+.favorite-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 24px;
+    background: white;
+    color: #666;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+    user-select: none;
+}
+
+.favorite-btn:hover {
+    border-color: #ff385c;
+    color: #ff385c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 56, 92, 0.15);
+}
+
+.favorite-btn:active {
+    transform: translateY(0);
+}
+
+.favorite-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* 已收藏状态 */
+.favorite-btn.favorited {
+    border-color: #ff385c;
+    background: #ff385c;
+    color: white;
+}
+
+.favorite-btn.favorited:hover {
+    background: #e31c5f;
+    border-color: #e31c5f;
+}
+
+/* 图标样式 */
+.favorite-icon {
+    width: 20px;
+    height: 20px;
+    transition: all 0.3s ease;
+}
+
+.favorite-btn.favorited .favorite-icon {
+    fill: white;
+    stroke: white;
+}
+
+/* 尺寸变体 */
+.favorite-btn-small {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+.favorite-btn-small .favorite-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.favorite-btn-medium {
+    padding: 10px 20px;
+    font-size: 14px;
+}
+
+.favorite-btn-medium .favorite-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.favorite-btn-large {
+    padding: 14px 28px;
+    font-size: 16px;
+}
+
+.favorite-btn-large .favorite-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* 心跳动画 */
+@keyframes heartbeat {
+    0% {
+        transform: scale(1);
+    }
+    15% {
+        transform: scale(1.3);
+    }
+    30% {
+        transform: scale(1);
+    }
+    45% {
+        transform: scale(1.2);
+    }
+    60% {
+        transform: scale(1);
+    }
+}
+
+.favorite-btn.heartbeat {
+    animation: heartbeat 0.6s ease-in-out;
+}
+
+.favorite-btn.heartbeat .favorite-icon {
+    animation: heartbeat 0.6s ease-in-out;
+}
+
+/* 粒子容器 */
+.favorite-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: visible;
+}
+
+/* 粒子样式 */
+.particle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #ff385c;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: particle-burst 0.8s ease-out forwards;
+}
+
+@keyframes particle-burst {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--tx), var(--ty)) scale(0);
+        opacity: 0;
+    }
+}
+
+/* 不同形状的粒子 */
+.particle:nth-child(odd) {
+    background: #ff385c;
+    border-radius: 50%;
+}
+
+.particle:nth-child(even) {
+    background: #ff6b9d;
+    border-radius: 2px;
+    transform: rotate(45deg);
+}
+
+.particle:nth-child(3n) {
+    width: 6px;
+    height: 6px;
+    background: #ffa8c5;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .favorite-btn {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+
+    .favorite-icon {
+        width: 18px;
+        height: 18px;
+    }
+
+    .favorite-btn-small {
+        padding: 5px 10px;
+        font-size: 11px;
+    }
+
+    .favorite-btn-small .favorite-icon {
+        width: 14px;
+        height: 14px;
+    }
+}
+
+/* 只显示图标的紧凑模式 */
+.favorite-btn.icon-only {
+    padding: 10px;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    justify-content: center;
+}
+
+.favorite-btn.icon-only .favorite-text {
+    display: none;
+}
+
+/* 加载状态 */
+.favorite-btn.loading {
+    pointer-events: none;
+}
+
+.favorite-btn.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* 悬浮提示 */
+.favorite-btn[data-tooltip] {
+    position: relative;
+}
+
+.favorite-btn[data-tooltip]:hover::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 6px 12px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    font-size: 12px;
+    white-space: nowrap;
+    border-radius: 4px;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.favorite-btn[data-tooltip]:hover::after {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 2px);
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: rgba(0, 0, 0, 0.8);
+    pointer-events: none;
+    z-index: 1000;
+}
+
+/* 暗色主题支持 */
+@media (prefers-color-scheme: dark) {
+    .favorite-btn {
+        background: #1a1a1a;
+        border-color: #333;
+        color: #ccc;
+    }
+
+    .favorite-btn:hover {
+        border-color: #ff385c;
+        color: #ff385c;
+        background: #1a1a1a;
+    }
+
+    .favorite-btn.favorited {
+        background: #ff385c;
+        border-color: #ff385c;
+        color: white;
+    }
+}
+
+/* 无障碍支持 */
+.favorite-btn:focus-visible {
+    outline: 2px solid #ff385c;
+    outline-offset: 2px;
+}
+
+/* 打印样式 */
+@media print {
+    .favorite-btn {
+        display: none;
+    }
+}

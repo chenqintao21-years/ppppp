@@ -1,0 +1,694 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f2f2f2;
+    color: #333;
+    padding-top: 0; /* 没有固定导航栏 */
+}
+
+/* 使用首页的导航栏样式 */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* 搜索栏区域 */
+.search-bar-section {
+    background-color: #fff;
+    padding: 20px;
+    border-bottom: 1px solid #e0e0e0;
+    margin-top: 0;
+}
+
+.search-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.search-input-wrapper {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.search-input-wrapper input {
+    flex: 1;
+    padding: 12px 20px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.search-input-wrapper input:focus {
+    border-color: #34e0a1;
+    box-shadow: 0 0 0 3px rgba(52, 224, 161, 0.1);
+    transform: translateY(-2px);
+}
+
+.search-btn {
+    padding: 12px 30px;
+    background-color: #34e0a1;
+    border: none;
+    border-radius: 25px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.search-btn:hover {
+    background-color: #2bc890;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(52, 224, 161, 0.3);
+}
+
+.search-btn:active {
+    transform: scale(0.98);
+}
+
+.search-filters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 8px 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+    border-color: #34e0a1;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(52, 224, 161, 0.2);
+}
+
+.filter-btn.active {
+    background-color: #000;
+    color: #fff;
+    border-color: #000;
+    transform: translateY(-2px);
+}
+
+/* 主要内容区 */
+.main-content {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.content-wrapper {
+    display: flex;
+    gap: 30px;
+}
+
+/* 侧边栏筛选 */
+.sidebar {
+    width: 280px;
+    flex-shrink: 0;
+}
+
+.filter-section {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.filter-section h3 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #34e0a1;
+}
+
+.filter-category-item {
+    display: block;
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    font-size: 15px;
+    color: #333;
+}
+
+.filter-category-item:hover {
+    background-color: #f5f5f5;
+    transform: translateX(5px);
+}
+
+.filter-category-item.active {
+    background-color: #34e0a1;
+    color: #fff;
+    font-weight: 600;
+}
+
+.filter-category-item input[type="radio"] {
+    display: none;
+}
+
+.filter-category-item span {
+    display: block;
+}
+
+.filter-divider {
+    height: 1px;
+    background-color: #e0e0e0;
+    margin: 20px 0;
+}
+
+.filter-group {
+    margin-bottom: 25px;
+}
+
+.filter-group h4 {
+    font-size: 16px;
+    margin-bottom: 12px;
+    color: #333;
+}
+
+.filter-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    color: #555;
+}
+
+.filter-group input[type="checkbox"] {
+    margin-right: 8px;
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    accent-color: #34e0a1;
+}
+
+.filter-group label:hover {
+    color: #34e0a1;
+}
+
+.clear-filters-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.clear-filters-btn:hover {
+    background-color: #e0e0e0;
+    transform: translateY(-2px);
+}
+
+.clear-filters-btn:active {
+    transform: translateY(0);
+}
+
+/* 侧边栏小组件 */
+.sidebar-widget {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.sidebar-widget h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.widget-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.widget-item:last-child {
+    border-bottom: none;
+}
+
+.widget-item:hover {
+    background-color: #f9f9f9;
+}
+
+.widget-item img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.widget-info {
+    flex: 1;
+}
+
+.widget-info h4 {
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.widget-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.widget-rating .stars {
+    color: #34e0a1;
+    font-size: 12px;
+}
+
+.widget-rating .rating-num {
+    font-size: 13px;
+    color: #666;
+    font-weight: 500;
+}
+
+/* 餐厅列表 */
+.restaurant-list {
+    flex: 1;
+}
+
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.list-header h2 {
+    font-size: 24px;
+    color: #333;
+}
+
+.sort-options {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sort-options label {
+    font-size: 14px;
+    color: #666;
+}
+
+.sort-options select {
+    padding: 8px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+}
+
+/* 餐厅卡片 */
+.restaurant-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.restaurant-card {
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.restaurant-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+
+.restaurant-card:hover .restaurant-image {
+    transform: scale(1.05);
+}
+
+.restaurant-image {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+}
+
+.restaurant-image-placeholder {
+    width: 200px;
+    height: 200px;
+    background-color: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    color: #999;
+}
+
+.restaurant-info {
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.restaurant-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 10px;
+}
+
+.restaurant-name {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+    transition: color 0.2s ease;
+}
+
+.restaurant-card:hover .restaurant-name {
+    color: #34e0a1;
+}
+
+.favorite-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.2s;
+}
+
+.favorite-btn:hover {
+    color: #ff5533;
+}
+
+.favorite-btn.favorited {
+    color: #ff5533;
+}
+
+/* 心跳动画 */
+@keyframes heartbeat {
+    0% { transform: scale(1); }
+    25% { transform: scale(1.3); }
+    50% { transform: scale(1.1); }
+    75% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+.restaurant-rating {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.rating-circles {
+    display: flex;
+    gap: 2px;
+}
+
+.rating-circle {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #34e0a1;
+    transition: transform 0.2s ease;
+}
+
+.rating-circle.empty {
+    background-color: #ddd;
+}
+
+.restaurant-card:hover .rating-circle {
+    transform: scale(1.2);
+}
+
+.rating-score {
+    font-weight: bold;
+    color: #333;
+}
+
+.review-count {
+    color: #666;
+    font-size: 14px;
+}
+
+.restaurant-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.tag {
+    padding: 4px 12px;
+    background-color: #f0f0f0;
+    border-radius: 15px;
+    font-size: 13px;
+    color: #555;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.tag:hover {
+    background-color: #e0e0e0;
+    transform: translateY(-2px);
+}
+
+.restaurant-description {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    flex: 1;
+}
+
+.restaurant-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.price-range {
+    font-size: 16px;
+    color: #666;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.view-details-btn {
+    padding: 8px 20px;
+    background-color: #34e0a1;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.view-details-btn:hover {
+    background-color: #2bc890;
+    transform: scale(1.05);
+}
+
+.view-details-btn:active {
+    transform: scale(0.98);
+}
+
+/* 加载更多 */
+.load-more-section {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.load-more-btn {
+    padding: 12px 40px;
+    background-color: #fff;
+    border: 2px solid #34e0a1;
+    border-radius: 25px;
+    color: #34e0a1;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.load-more-btn:hover {
+    background-color: #34e0a1;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(52, 224, 161, 0.3);
+}
+
+.load-more-btn:active {
+    transform: translateY(0);
+}
+
+/* 页脚 */
+.main-footer {
+    background-color: #333;
+    color: #fff;
+    padding: 30px 20px;
+    margin-top: 50px;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.footer-links {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.footer-links a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
+/* 响应式设计 */
+@media (max-width: 968px) {
+    .content-wrapper {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+    }
+
+    .restaurant-card {
+        flex-direction: column;
+    }
+
+    .restaurant-image,
+    .restaurant-image-placeholder {
+        width: 100%;
+        height: 250px;
+    }
+}
+
+@media (max-width: 640px) {
+    .main-nav {
+        display: none;
+    }
+
+    .list-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .restaurant-footer {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+}
+
+/* 加载动画 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease;
+}
+
+/* 加载中动画 */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-spinner {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #34e0a1;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+/* 平滑滚动 */
+html {
+    scroll-behavior: smooth;
+}
+
+/* 侧边栏固定效果 */
+.sidebar {
+    position: sticky;
+    top: 100px;
+    align-self: flex-start;
+}
+
+/* 图片加载效果 */
+.restaurant-image {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s ease-in-out infinite;
+}
+
+.restaurant-image[src] {
+    animation: none;
+    background: none;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}

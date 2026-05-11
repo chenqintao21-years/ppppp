@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试长沙景点数据</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .attraction-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            display: flex;
+            gap: 15px;
+        }
+        .attraction-card img {
+            width: 200px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .attraction-info {
+            flex: 1;
+        }
+        .attraction-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .rating {
+            color: #ff5533;
+            margin-bottom: 8px;
+        }
+        .tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+        .tag {
+            background: #e8f5e9;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        .error {
+            color: #d32f2f;
+            padding: 20px;
+            background: #ffebee;
+            border-radius: 4px;
+        }
+        .success {
+            color: #388e3c;
+            padding: 20px;
+            background: #e8f5e9;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>测试长沙景点数据加载</h1>
+
+    <div class="test-section">
+        <h2>API 测试结果</h2>
+        <div id="apiStatus">正在测试...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>景点列表</h2>
+        <div id="attractionsList">
+            <div class="loading">加载中...</div>
+        </div>
+    </div>
+
+    <script>
+        async function testAPI() {
+            const statusDiv = document.getElementById('apiStatus');
+            const listDiv = document.getElementById('attractionsList');
+
+            try {
+                // 测试 API
+                const response = await fetch('http://localhost:3000/api/attractions/search?location=长沙&page=1&limit=10');
+                const result = await response.json();
+
+                if (result.success && result.data && result.data.length > 0) {
+                    statusDiv.innerHTML = `
+                        <div class="success">
+                            ✅ API 测试成功！<br>
+                            找到 ${result.data.length} 个景点<br>
+                            总数: ${result.pagination.total || result.data.length}
+                        </div>
+                    `;
+
+                    // 显示景点列表
+                    listDiv.innerHTML = '';
+                    result.data.forEach(attraction => {
+                        const card = createAttractionCard(attraction);
+                        listDiv.appendChild(card);
+                    });
+                } else {
+                    statusDiv.innerHTML = `
+                        <div class="error">
+                            ❌ 未找到数据<br>
+                            响应: ${JSON.stringify(result)}
+                        </div>
+                    `;
+                    listDiv.innerHTML = '<p>未找到景点数据</p>';
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `
+                    <div class="error">
+                        ❌ API 请求失败<br>
+                        错误: ${error.message}
+                    </div>
+                `;
+                listDiv.innerHTML = '<p>加载失败</p>';
+            }
+        }
+
+        function createAttractionCard(attraction) {
+            const card = document.createElement('div');
+            card.className = 'attraction-card';
+
+            // 处理评分
+            const rating = parseFloat(attraction.rating) || 0;
+            const reviewCount = attraction.review_count || attraction.reviewCount || 0;
+
+            // 处理标签
+            let tags = [];
+            if (attraction.type) {
+                tags = attraction.type.split(';').filter(t => t.trim()).slice(0, 3);
+            }
+
+            // 处理票价
+            let ticketPrice = '免费';
+            if (attraction.price && parseFloat(attraction.price) > 0) {
+                ticketPrice = `${attraction.currency || '¥'}${parseFloat(attraction.price)}`;
+            }
+
+            card.innerHTML = `
+                <img src="${attraction.image}" alt="${attraction.name}">
+                <div class="attraction-info">
+                    <div class="attraction-name">${attraction.name}</div>
+                    <div class="rating">⭐ ${rating.toFixed(1)} (${reviewCount} 条点评)</div>
+                    <div class="tags">
+                        ${tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>
+                    <div>${attraction.description || '暂无描述'}</div>
+                    <div style="margin-top: 8px; color: #ff5533; font-weight: bold;">${ticketPrice}</div>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // 页面加载时执行测试
+        testAPI();
+    </script>
+</body>
+</html>

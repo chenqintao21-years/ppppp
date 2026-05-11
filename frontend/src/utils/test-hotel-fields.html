@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>酒店详细信息字段测试</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            padding: 20px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #4caf50;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 12px 24px;
+            background: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+        }
+        .status.loading {
+            background: #1e3a5f;
+            border-color: #2196f3;
+        }
+        .status.success {
+            background: #1e3a1e;
+            border-color: #4caf50;
+        }
+        .status.error {
+            background: #3a1e1e;
+            border-color: #f44336;
+        }
+        .hotel-card {
+            background: #2d2d2d;
+            border: 1px solid #404040;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .hotel-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #4caf50;
+            margin-bottom: 15px;
+        }
+        .field-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .field-item {
+            background: #1e1e1e;
+            padding: 10px;
+            border-radius: 4px;
+            border-left: 3px solid #666;
+        }
+        .field-item.has-value {
+            border-left-color: #4caf50;
+        }
+        .field-name {
+            color: #888;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+        .field-value {
+            color: #d4d4d4;
+            font-size: 14px;
+            word-break: break-all;
+        }
+        .field-value.empty {
+            color: #666;
+            font-style: italic;
+        }
+        .raw-json {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin-top: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        .summary {
+            background: #2d2d2d;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .summary-item {
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        .summary-item strong {
+            color: #4caf50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔬 高德地图酒店详细信息字段测试</h1>
+        <button onclick="testAllFields()">🔍 测试所有可用字段</button>
+        <div id="status"></div>
+        <div id="summary"></div>
+        <div id="results"></div>
+    </div>
+
+    <script type="module">
+        import mapUtil from './map.js';
+
+        // 需要检测的所有可能字段
+        const fieldsToCheck = [
+            // 基础信息
+            'id', 'name', 'address', 'tel', 'type', 'typecode',
+            // 位置信息
+            'location', 'pname', 'cityname', 'adname', 'distance',
+            // 评分和价格
+            'rating', 'cost', 'price', 'star', 'grade',
+            // 商业信息
+            'biz_ext', 'biz_type', 'business_area',
+            // 图片
+            'photos', 'photo', 'images',
+            // 设施
+            'facilities', 'amenities', 'services',
+            // 房间
+            'rooms', 'room_types',
+            // 其他
+            'website', 'email', 'postcode', 'alias',
+            'indoor_map', 'indoor_data', 'children',
+            'recommend', 'groupbuy_num', 'discount_num',
+            'shopinfo', 'poiweight', 'citycode', 'adcode',
+            'entr_location', 'exit_location', 'navi_poiid',
+            'gridcode', 'tag', 'timestamp'
+        ];
+
+        window.testAllFields = async function() {
+            const statusDiv = document.getElementById('status');
+            const summaryDiv = document.getElementById('summary');
+            const resultsDiv = document.getElementById('results');
+
+            statusDiv.innerHTML = '<div class="status loading">🔄 正在搜索酒店并分析所有字段...</div>';
+            summaryDiv.innerHTML = '';
+            resultsDiv.innerHTML = '';
+
+            try {
+                await mapUtil.loadMapScript();
+
+                // 搜索北京王府井附近的酒店
+                const center = [116.417592, 39.917723];
+
+                // 直接调用高德API获取原始数据
+                const placeSearch = new mapUtil.AMap.PlaceSearch({
+                    type: '100100',
+                    pageSize: 5,
+                    pageIndex: 1,
+                    extensions: 'all'
+                });
+
+                placeSearch.searchNearBy('', center, 2000, (status, result) => {
+                    if (status === 'complete' && result.poiList) {
+                        const hotels = result.poiList.pois;
+
+                        statusDiv.innerHTML = `<div class="status success">✅ 找到 ${hotels.length} 家酒店，正在分析字段...</div>`;
+
+                        // 统计字段出现情况
+                        const fieldStats = {};
+                        fieldsToCheck.forEach(field => {
+                            fieldStats[field] = {
+                                count: 0,
+                                examples: []
+                            };
+                        });
+
+                        // 分析每家酒店
+                        hotels.forEach((hotel, index) => {
+                            // 检查所有字段
+                            fieldsToCheck.forEach(field => {
+                                if (hotel[field] !== undefined && hotel[field] !== null && hotel[field] !== '') {
+                                    fieldStats[field].count++;
+                                    if (fieldStats[field].examples.length < 3) {
+                                        fieldStats[field].examples.push(hotel[field]);
+                                    }
+                                }
+                            });
+
+                            // 显示酒店详情
+                            const card = document.createElement('div');
+                            card.className = 'hotel-card';
+
+                            let fieldsHtml = '<div class="field-grid">';
+                            fieldsToCheck.forEach(field => {
+                                const hasValue = hotel[field] !== undefined && hotel[field] !== null && hotel[field] !== '';
+                                const value = hasValue ?
+                                    (typeof hotel[field] === 'object' ? JSON.stringify(hotel[field]) : hotel[field]) :
+                                    '无数据';
+
+                                fieldsHtml += `
+                                    <div class="field-item ${hasValue ? 'has-value' : ''}">
+                                        <div class="field-name">${field}</div>
+                                        <div class="field-value ${hasValue ? '' : 'empty'}">${value}</div>
+                                    </div>
+                                `;
+                            });
+                            fieldsHtml += '</div>';
+
+                            card.innerHTML = `
+                                <div class="hotel-name">${index + 1}. ${hotel.name}</div>
+                                ${fieldsHtml}
+                                <details>
+                                    <summary style="cursor: pointer; color: #888; margin-top: 15px;">📄 查看完整原始JSON</summary>
+                                    <pre class="raw-json">${JSON.stringify(hotel, null, 2)}</pre>
+                                </details>
+                            `;
+                            resultsDiv.appendChild(card);
+                        });
+
+                        // 显示统计摘要
+                        let summaryHtml = '<div class="summary"><h2 style="color: #4caf50; margin-bottom: 15px;">📊 字段统计摘要</h2>';
+
+                        const availableFields = [];
+                        const unavailableFields = [];
+
+                        fieldsToCheck.forEach(field => {
+                            if (fieldStats[field].count > 0) {
+                                availableFields.push({
+                                    field,
+                                    count: fieldStats[field].count,
+                                    percentage: (fieldStats[field].count / hotels.length * 100).toFixed(1),
+                                    example: fieldStats[field].examples[0]
+                                });
+                            } else {
+                                unavailableFields.push(field);
+                            }
+                        });
+
+                        summaryHtml += '<h3 style="color: #4caf50; margin-top: 15px;">✅ 可用字段 (' + availableFields.length + ')</h3>';
+                        availableFields.forEach(item => {
+                            const exampleStr = typeof item.example === 'object' ?
+                                JSON.stringify(item.example).substring(0, 100) :
+                                String(item.example).substring(0, 100);
+                            summaryHtml += `
+                                <div class="summary-item">
+                                    <strong>${item.field}</strong>: ${item.count}/${hotels.length} (${item.percentage}%)
+                                    <br><span style="color: #888; font-size: 12px;">示例: ${exampleStr}</span>
+                                </div>
+                            `;
+                        });
+
+                        summaryHtml += '<h3 style="color: #f44336; margin-top: 20px;">❌ 不可用字段 (' + unavailableFields.length + ')</h3>';
+                        summaryHtml += '<div style="color: #666;">' + unavailableFields.join(', ') + '</div>';
+
+                        summaryHtml += '</div>';
+                        summaryDiv.innerHTML = summaryHtml;
+
+                    } else {
+                        statusDiv.innerHTML = '<div class="status error">❌ 搜索失败</div>';
+                    }
+                });
+
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="status error">❌ 测试失败: ${error.message}</div>`;
+                console.error(error);
+            }
+        };
+    </script>
+</body>
+</html>

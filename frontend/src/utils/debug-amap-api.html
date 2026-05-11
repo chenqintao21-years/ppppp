@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高德地图API原始数据调试</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+        }
+        h1 {
+            color: #4caf50;
+        }
+        button {
+            padding: 12px 24px;
+            background: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            background: #2d2d2d;
+        }
+        .hotel-debug {
+            background: #2d2d2d;
+            border: 1px solid #404040;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .hotel-name {
+            font-size: 18px;
+            color: #4caf50;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .field {
+            margin: 8px 0;
+            padding: 8px;
+            background: #1e1e1e;
+            border-radius: 4px;
+        }
+        .field-name {
+            color: #569cd6;
+            display: inline-block;
+            min-width: 180px;
+        }
+        .field-value {
+            color: #ce9178;
+        }
+        .field-value.null {
+            color: #666;
+            font-style: italic;
+        }
+        .field-value.object {
+            color: #dcdcaa;
+        }
+        pre {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            line-height: 1.5;
+        }
+        .highlight {
+            background: #3a3a1e;
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+        .section-title {
+            color: #4caf50;
+            margin: 30px 0 20px 0;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 高德地图API原始数据调试</h1>
+    <button onclick="debugAPI()">开始调试</button>
+    <div id="status"></div>
+    <div id="results"></div>
+
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=987e520a1fb34f1680b515ff7ceb572e&plugin=AMap.PlaceSearch"></script>
+    <script>
+        // 配置安全密钥
+        window._AMapSecurityConfig = {
+            securityJsCode: '28cda766a6399e06cfeacca6dc9bd4c1'
+        };
+
+        async function debugAPI() {
+            const statusDiv = document.getElementById('status');
+            const resultsDiv = document.getElementById('results');
+
+            statusDiv.innerHTML = '<div class="status">🔄 正在获取数据...</div>';
+            resultsDiv.innerHTML = '';
+
+            try {
+                // 测试多个城市
+                const testLocations = [
+                    { name: '北京王府井', center: [116.417592, 39.917723] },
+                    { name: '上海外滩', center: [121.4905, 31.2397] },
+                    { name: '广州天河', center: [113.3245, 23.1545] }
+                ];
+
+                for (const location of testLocations) {
+                    statusDiv.innerHTML = `<div class="status">🔄 正在测试: ${location.name}</div>`;
+
+                    // 直接调用高德API
+                    const placeSearch = new AMap.PlaceSearch({
+                        type: '100100',  // 酒店类型
+                        pageSize: 3,
+                        pageIndex: 1,
+                        extensions: 'all'  // 获取详细信息
+                    });
+
+                    await new Promise((resolve) => {
+                        placeSearch.searchNearBy('', location.center, 2000, (status, result) => {
+                            if (status === 'complete' && result.poiList) {
+                                const hotels = result.poiList.pois;
+
+                                const locationDiv = document.createElement('div');
+                                locationDiv.innerHTML = `<h2 class="section-title">📍 ${location.name} - 找到 ${hotels.length} 个结果</h2>`;
+                                resultsDiv.appendChild(locationDiv);
+
+                                hotels.forEach((hotel, index) => {
+                                    const debugDiv = document.createElement('div');
+                                    debugDiv.className = 'hotel-debug';
+
+                                    // 检查关键字段
+                                    const bizExt = hotel.biz_ext || {};
+                                    const hasRating = bizExt.rating;
+                                    const hasCost = bizExt.cost;
+                                    const hasPhotos = hotel.photos && hotel.photos.length > 0;
+
+                                    let fieldsHtml = `
+                                        <div class="hotel-name">${index + 1}. ${hotel.name}</div>
+
+                                        <div class="field">
+                                            <span class="field-name">id:</span>
+                                            <span class="field-value">${hotel.id || 'null'}</span>
+                                        </div>
+
+                                        <div class="field">
+                                            <span class="field-name">address:</span>
+                                            <span class="field-value">${hotel.address || 'null'}</span>
+                                        </div>
+
+                                        <div class="field">
+                                            <span class="field-name">tel:</span>
+                                            <span class="field-value">${hotel.tel || 'null'}</span>
+                                        </div>
+
+                                        <div class="field ${hasRating ? 'highlight' : ''}">
+                                            <span class="field-name">⭐ biz_ext.rating:</span>
+                                            <span class="field-value ${hasRating ? '' : 'null'}">${hasRating || '❌ 无评分数据'}</span>
+                                        </div>
+
+                                        <div class="field ${hasCost ? 'highlight' : ''}">
+                                            <span class="field-name">💰 biz_ext.cost:</span>
+                                            <span class="field-value ${hasCost ? '' : 'null'}">${hasCost || '❌ 无价格数据'}</span>
+                                        </div>
+
+                                        <div class="field ${hasPhotos ? 'highlight' : ''}">
+                                            <span class="field-name">📷 photos:</span>
+                                            <span class="field-value ${hasPhotos ? '' : 'null'}">${hasPhotos ? `${hotel.photos.length} 张图片` : '❌ 无图片'}</span>
+                                        </div>
+
+                                        ${hasPhotos && hotel.photos[0] ? `
+                                        <div class="field highlight">
+                                            <span class="field-name">📷 photos[0].url:</span>
+                                            <span class="field-value">${hotel.photos[0].url || 'null'}</span>
+                                        </div>
+                                        <div class="field highlight">
+                                            <span class="field-name">📷 图片预览:</span>
+                                            <div style="margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap;">
+                                                ${hotel.photos.slice(0, 5).map(photo => `
+                                                    <img src="${photo.url}"
+                                                         style="width: 150px; height: 100px; object-fit: cover; border-radius: 4px; border: 1px solid #404040;"
+                                                         alt="${hotel.name}"
+                                                         onerror="this.style.border='2px solid red'; this.alt='图片加载失败'">
+                                                `).join('')}
+                                            </div>
+                                        </div>
+                                        ` : ''}
+
+                                        <div class="field">
+                                            <span class="field-name">website:</span>
+                                            <span class="field-value ${hotel.website ? '' : 'null'}">${hotel.website || 'null'}</span>
+                                        </div>
+
+                                        <div class="field">
+                                            <span class="field-name">type:</span>
+                                            <span class="field-value">${hotel.type || 'null'}</span>
+                                        </div>
+
+                                        <div class="field">
+                                            <span class="field-name">typecode:</span>
+                                            <span class="field-value">${hotel.typecode || 'null'}</span>
+                                        </div>
+
+                                        <div class="field">
+                                            <span class="field-name">business_area:</span>
+                                            <span class="field-value ${hotel.business_area ? '' : 'null'}">${hotel.business_area || 'null'}</span>
+                                        </div>
+
+                                        <div class="field">
+                                            <span class="field-name">tag:</span>
+                                            <span class="field-value ${hotel.tag ? '' : 'null'}">${hotel.tag || 'null'}</span>
+                                        </div>
+
+                                        <div class="field">
+                                            <span class="field-name">biz_ext (完整对象):</span>
+                                            <span class="field-value object">${JSON.stringify(bizExt)}</span>
+                                        </div>
+                                    `;
+
+                                    debugDiv.innerHTML = fieldsHtml + `
+                                        <details style="margin-top: 15px;">
+                                            <summary style="cursor: pointer; color: #888;">查看完整JSON</summary>
+                                            <pre>${JSON.stringify(hotel, null, 2)}</pre>
+                                        </details>
+                                    `;
+
+                                    resultsDiv.appendChild(debugDiv);
+                                });
+                            } else {
+                                const errorDiv = document.createElement('div');
+                                errorDiv.className = 'hotel-debug';
+                                errorDiv.innerHTML = `
+                                    <div class="hotel-name">❌ ${location.name} - 搜索失败</div>
+                                    <div class="field">
+                                        <span class="field-name">错误信息:</span>
+                                        <span class="field-value">${status}</span>
+                                    </div>
+                                `;
+                                resultsDiv.appendChild(errorDiv);
+                            }
+                            resolve();
+                        });
+                    });
+                }
+
+                statusDiv.innerHTML = `
+                    <div class="status">
+                        ✅ 调试完成<br><br>
+                        <strong>高德地图API数据总结：</strong><br>
+                        • <span class="highlight">评分数据</span>: biz_ext.rating<br>
+                        • <span class="highlight">价格数据</span>: biz_ext.cost（通常为空）<br>
+                        • <span class="highlight">图片数据</span>: photos 数组，包含图片URL<br>
+                        • <span class="highlight">商圈信息</span>: business_area<br>
+                        • <span class="highlight">标签信息</span>: tag<br><br>
+                        <strong>限制：</strong><br>
+                        高德地图API不提供评论内容、房型信息和实时价格。<br>
+                        如果所有酒店的 biz_ext.rating 和 biz_ext.cost 都显示 "❌ 无数据"，<br>
+                        说明高德地图POI搜索API在这些区域不提供评分和价格信息。<br><br>
+                        <strong>替代方案：</strong><br>
+                        1. 使用携程、去哪儿等OTA平台API获取价格和评分<br>
+                        2. 使用大众点评、美团API获取用户评价<br>
+                        3. 爬取酒店预订网站（需遵守robots.txt）
+                    </div>
+                `;
+
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="status">❌ 调试失败: ${error.message}</div>`;
+                console.error(error);
+            }
+        }
+    </script>
+</body>
+</html>

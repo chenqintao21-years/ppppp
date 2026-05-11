@@ -1,0 +1,899 @@
+/* 景点详情页样式 */
+
+/* 子导航样式美化 */
+.sub-nav {
+    display: flex;
+    gap: 32px;
+    padding: 0 0 0 0;
+    border-bottom: 1px solid #e0e0e0;
+    position: relative;
+    z-index: 10;
+}
+
+.sub-nav-link {
+    text-decoration: none;
+    color: #333;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 12px 0;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+    position: relative;
+    cursor: pointer;
+    background: transparent;
+}
+
+.sub-nav-link:hover {
+    color: #000;
+    border-bottom-color: #ccc;
+}
+
+.sub-nav-link.active {
+    color: #000;
+    font-weight: 600;
+    border-bottom-color: #00aa6c;
+}
+
+.detail-main {
+    background: #fff;
+    padding-top: 20px;
+}
+
+/* 面包屑导航 */
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 0;
+    font-size: 14px;
+    color: #666;
+}
+
+.breadcrumb a {
+    color: #000;
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.breadcrumb span:last-child {
+    color: #666;
+}
+
+/* 布局 */
+.detail-layout {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 40px;
+    margin-top: 20px;
+}
+
+/* 详情头部 */
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.detail-title {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0;
+    flex: 1;
+}
+
+.favorite-btn-detail {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: 1px solid #000;
+    border-radius: 24px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.favorite-btn-detail:hover {
+    background: #f7f7f7;
+}
+
+.favorite-btn-detail svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* 评分区域 */
+.rating-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.rating-bubbles-large {
+    display: flex;
+    gap: 4px;
+}
+
+.rating-bubbles-large .bubble {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #00aa6c;
+}
+
+.rating-score {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.review-count {
+    color: #666;
+    font-size: 14px;
+}
+
+/* 图片画廊 */
+.image-gallery {
+    margin-bottom: 32px;
+}
+
+.main-image {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.main-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.gallery-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.gallery-nav:hover {
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.gallery-nav.prev {
+    left: 16px;
+}
+
+.gallery-nav.next {
+    right: 16px;
+}
+
+.image-counter {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.thumbnail-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+}
+
+.thumbnail {
+    height: 80px;
+    border-radius: 8px;
+    background: #e0e0e0;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.thumbnail:hover {
+    opacity: 0.8;
+}
+
+.thumbnail.active {
+    border: 3px solid #00aa6c;
+}
+
+.thumbnail.more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* 关于区域 */
+.about-section,
+.highlights-section,
+.includes-section,
+.reviews-section {
+    margin-bottom: 40px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.about-section h2,
+.highlights-section h2,
+.includes-section h2,
+.reviews-section h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.about-text {
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 16px;
+}
+
+.read-more {
+    background: none;
+    border: none;
+    color: #000;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+}
+
+/* 亮点列表 */
+.highlights-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.highlights-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    font-size: 16px;
+}
+
+/* 包含内容 */
+.includes-grid,
+.excludes-grid {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.include-item,
+.exclude-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 16px;
+}
+
+.includes-section h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 24px 0 16px;
+}
+
+/* 评论区 */
+.reviews-summary {
+    margin-bottom: 32px;
+}
+
+.rating-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rating-bar {
+    display: grid;
+    grid-template-columns: 80px 1fr 60px;
+    align-items: center;
+    gap: 12px;
+}
+
+.rating-label {
+    font-size: 14px;
+    color: #333;
+}
+
+.bar {
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    background: #00aa6c;
+    transition: width 0.3s;
+}
+
+.rating-percent {
+    font-size: 14px;
+    color: #666;
+    text-align: right;
+}
+
+/* 评论列表 */
+.reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.review-card {
+    padding: 24px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+}
+
+.review-header {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.reviewer-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.reviewer-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.reviewer-info {
+    flex: 1;
+}
+
+.reviewer-name {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0 0 4px;
+}
+
+.reviewer-location,
+.reviewer-contributions {
+    font-size: 13px;
+    color: #666;
+    margin: 0;
+}
+
+.review-rating {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.rating-bubbles-small {
+    display: flex;
+    gap: 2px;
+}
+
+.rating-bubbles-small .bubble {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #00aa6c;
+}
+
+.rating-bubbles-small .bubble.half {
+    background: linear-gradient(90deg, #00aa6c 50%, #e0e0e0 50%);
+}
+
+.review-date {
+    font-size: 13px;
+    color: #666;
+}
+
+.review-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 12px;
+}
+
+.review-text {
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 16px;
+}
+
+.review-footer {
+    display: flex;
+    gap: 12px;
+}
+
+.helpful-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.helpful-btn:hover {
+    background: #f7f7f7;
+}
+
+.load-more-reviews {
+    width: 100%;
+    padding: 14px;
+    border: 2px solid #000;
+    border-radius: 24px;
+    background: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.load-more-reviews:hover {
+    background: #000;
+    color: #fff;
+}
+
+/* 预订侧边栏 */
+.booking-sidebar {
+    position: relative;
+}
+
+.booking-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 24px;
+    background: #fff;
+}
+
+.booking-card.sticky {
+    position: sticky;
+    top: 20px;
+}
+
+.price-section {
+    text-align: center;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 24px;
+}
+
+.price-label {
+    font-size: 14px;
+    color: #666;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.price-amount {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 4px;
+}
+
+.currency-symbol {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.price {
+    font-size: 40px;
+    font-weight: 700;
+}
+
+.price-note {
+    font-size: 14px;
+    color: #666;
+    display: block;
+    margin-top: 4px;
+}
+
+/* 预订表单 */
+.booking-form {
+    margin-bottom: 24px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.travelers-selector {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 8px;
+}
+
+.qty-btn {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #e0e0e0;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.qty-btn:hover {
+    background: #f7f7f7;
+}
+
+.qty-input {
+    width: 60px;
+    text-align: center;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.book-now-btn {
+    width: 100%;
+    padding: 16px;
+    background: #00aa6c;
+    color: #fff;
+    border: none;
+    border-radius: 24px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.book-now-btn:hover {
+    background: #008f5a;
+}
+
+/* 预订特性 */
+.booking-features {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 24px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+}
+
+/* 相关推荐 */
+.related-section {
+    margin: 60px 0;
+}
+
+.related-section h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 24px;
+}
+
+.related-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.related-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.related-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.related-image {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+}
+
+.related-content {
+    padding: 16px;
+}
+
+.related-content h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 8px;
+}
+
+.rating-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.review-text {
+    font-size: 13px;
+    color: #666;
+}
+
+.related-price {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 8px 0 0;
+}
+
+/* 响应式 */
+@media (max-width: 1024px) {
+    .detail-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .booking-sidebar {
+        order: -1;
+    }
+
+    .booking-card.sticky {
+        position: static;
+    }
+
+    .related-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .detail-title {
+        font-size: 24px;
+    }
+
+    .main-image {
+        height: 300px;
+    }
+
+    .related-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .thumbnail-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* 地图区域 */
+.map-section {
+    margin-top: 40px;
+    padding-top: 40px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.map-section h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+#attraction-map {
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.map-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.map-address {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #333;
+    font-size: 14px;
+    margin: 0;
+}
+
+.map-address svg {
+    color: #00aa6c;
+    flex-shrink: 0;
+}
+
+.map-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.map-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.map-btn:hover {
+    background: #f7f7f7;
+    border-color: #00aa6c;
+    color: #00aa6c;
+}
+
+.map-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.map-btn:active {
+    transform: scale(0.98);
+}
+
+@media (max-width: 768px) {
+    .map-info {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .map-actions {
+        width: 100%;
+    }
+
+    .map-btn {
+        flex: 1;
+        justify-content: center;
+    }
+}
+
+/* 详细信息区域 */
+.info-section {
+    margin-top: 32px;
+    padding: 24px;
+    background: #f7f7f7;
+    border-radius: 8px;
+}
+
+.info-section h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #000;
+}
+
+.info-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.info-item svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: #00aa6c;
+}
+
+.info-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.info-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    font-size: 15px;
+    color: #000;
+    line-height: 1.5;
+}
+
+.facilities-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.facility-tag {
+    display: inline-block;
+    padding: 6px 12px;
+    background: #e8f5f1;
+    color: #00aa6c;
+    border-radius: 16px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .info-section {
+        padding: 16px;
+    }
+
+    .info-item {
+        padding: 12px;
+    }
+}
